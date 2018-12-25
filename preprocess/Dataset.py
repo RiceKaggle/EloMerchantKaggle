@@ -16,7 +16,7 @@ class Dataset(object):
     def load_train(self):
         print('load train data ...')
         if not os.path.isfile(self.train_path):
-            print('train path not found ! ')
+            print('{} - train path not found ! '.format(self.train_path))
             return
         return pd.read_csv(self.train_path, parse_dates=['first_active_month'])
 
@@ -30,7 +30,7 @@ class Dataset(object):
     def load_test(self):
         print('load test data ... ')
         if not os.path.isfile(self.test_path):
-            print('test path not found ! ')
+            print('{} - test path not found ! '.format(self.test_path))
             return
         return pd.read_csv(self.test_path, parse_dates=['first_active_month'])
 
