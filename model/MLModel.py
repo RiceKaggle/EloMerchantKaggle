@@ -63,7 +63,8 @@ class LGBModel(MLModel):
         self.so_far_best_params=None
         # this can add additional features to the param list
         self.non_numeric_param = {'objective': self.objective,  'metric': self.metric}
-        data_set = Dataset(train_file_name,test_file_name)
+        data_set = Dataset(train_file_name,test_file_name, base_dir= self.data_dir)
+        
         self.train_X, self.train_Y , self.test, self.train_features, self.cate_features= data_set.preprocess(reload=True)
 
     def predict(self, file_name = 'submission.csv'):
