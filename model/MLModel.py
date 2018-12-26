@@ -42,8 +42,9 @@ class MLModel(object):
 
 class LGBModel(MLModel):
     def __init__(self, non_numeric_param=None,
-                 objective='regression',
+                 objective='regression',debug = False,
                  metric='rmse', bayesian_optimisation=False,
+                 bayesian_iteration = 50,
                  split_method='KFold', n_splits=5,
                  random_state=2018, num_round=10000,
                  shuffle=True, data_dir="../data",
@@ -55,8 +56,10 @@ class LGBModel(MLModel):
 
         :param non_numeric_param: non-numeric parameter, do not optimize these parameter
         :param objective: the objective of the model
+        :param debug: if set debug equals to true, use debug model (load part of training and test data)
         :param metric:
         :param bayesian_optimisation: if true, use bayesian optimization to search best parameter, otherwise, use grid search
+        :param baysian_iteration: num of iterations bayesian optimization run
         :param split_method: 'KFold' and 'StratifiedKFold' are available
         :param n_splits: number of fold you want to have in you train/val set
         :param random_state:
@@ -72,9 +75,11 @@ class LGBModel(MLModel):
         super(LGBModel, self).__init__()
         self.submission_dir = submission_dir
         self.objective = objective
+        self.debug = debug
         self.metric = metric
         self.num_round = num_round
         self.split_method = split_method
+        self.bayesian_iteration = bayesian_iteration
         self.bayesian_optimisation = bayesian_optimisation
         self.n_splits = n_splits
         self.random_state = random_state
@@ -180,10 +185,11 @@ class LGBModel(MLModel):
     def train(self, params_list=None):
         self.read_data()
 
-        # debug
-        # self.train_X = self.train_X[:1000]
-        # self.test = self.test[:1000]
-        # self.train_Y = self.train_Y[:1000]
+        # debug mode only load part of data, to test whether the whole pipeline works
+        if self.debug:
+            self.train_X = self.train_X[:1000]
+            self.test = self.test[:1000]
+            self.train_Y = self.train_Y[:1000]
 
         if not self.bayesian_optimisation:
             # frid search the best parameter
@@ -211,8 +217,7 @@ class LGBModel(MLModel):
                     self.so_far_best_params = param_candidate[i]
 
     def prepare_baysian_optimization(self):
-        n_iters = 50
-        sample_loss = None
+        n_iters = self.bayesian_iteration
         # each bounds corresponding to ['num_leaves','max_depth','min_child_weight','learning_rate','bagging_fraction','feature_fraction','bagging_freq']
         bounds = [[10, 25], [5, 10], [10, 30], [0.03, 0.08], [0, 0.7], [0, 0.7], [1, 10]]
 

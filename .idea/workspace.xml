@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="61b8f875-c0c0-4284-8748-721dd2c4a72e" name="Default" comment="First commit">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/model/MLModel.py" afterPath="$PROJECT_DIR$/model/MLModel.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/model/bayesian_optimization.py" afterPath="$PROJECT_DIR$/model/bayesian_optimization.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -23,8 +21,8 @@
       <file leaf-file-name="MLModel.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/model/MLModel.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="297">
-              <caret line="216" column="87" lean-forward="false" selection-start-line="216" selection-start-column="87" selection-end-line="216" selection-end-column="87" />
+            <state relative-caret-position="244">
+              <caret line="128" column="42" lean-forward="true" selection-start-line="128" selection-start-column="42" selection-end-line="128" selection-end-column="42" />
               <folding>
                 <element signature="e#0#30#0" expanded="true" />
               </folding>
@@ -45,8 +43,8 @@
       <file leaf-file-name="bayesian_optimization.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/model/bayesian_optimization.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="371">
-              <caret line="155" column="0" lean-forward="false" selection-start-line="155" selection-start-column="0" selection-end-line="155" selection-end-column="0" />
+            <state relative-caret-position="781">
+              <caret line="125" column="82" lean-forward="false" selection-start-line="125" selection-start-column="69" selection-end-line="125" selection-end-column="82" />
               <folding>
                 <element signature="e#56#74#0" expanded="true" />
               </folding>
@@ -137,8 +135,9 @@
     <findStrings>
       <find>model</find>
       <find>_train</find>
-      <find>check_X_y</find>
       <find>baysan</find>
+      <find>debug</find>
+      <find>check_X_y</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -694,16 +693,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/model/bayesian_optimization.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="371">
-          <caret line="155" column="0" lean-forward="false" selection-start-line="155" selection-start-column="0" selection-end-line="155" selection-end-column="0" />
-          <folding>
-            <element signature="e#56#74#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../../../codelibrary/anaconda2/envs/kaggle/lib/python3.4/site-packages/lightgbm/basic.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="195">
@@ -712,10 +701,20 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/model/bayesian_optimization.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="781">
+          <caret line="125" column="82" lean-forward="false" selection-start-line="125" selection-start-column="69" selection-end-line="125" selection-end-column="82" />
+          <folding>
+            <element signature="e#56#74#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/model/MLModel.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="297">
-          <caret line="216" column="87" lean-forward="false" selection-start-line="216" selection-start-column="87" selection-end-line="216" selection-end-column="87" />
+        <state relative-caret-position="244">
+          <caret line="128" column="42" lean-forward="true" selection-start-line="128" selection-start-column="42" selection-end-line="128" selection-end-column="42" />
           <folding>
             <element signature="e#0#30#0" expanded="true" />
           </folding>
