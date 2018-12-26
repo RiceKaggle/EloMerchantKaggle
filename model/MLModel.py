@@ -190,6 +190,7 @@ class LGBModel(MLModel):
             self.train_X = self.train_X[:1000]
             self.test = self.test[:1000]
             self.train_Y = self.train_Y[:1000]
+            self.bayesian_iteration = 1
 
         if not self.bayesian_optimisation:
             # frid search the best parameter
