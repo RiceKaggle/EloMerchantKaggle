@@ -174,6 +174,8 @@ class LGBModel(MLModel):
                                      'bagging_fraction', 'feature_fraction', 'bagging_freq']):
             if key in ['num_leaves', 'max_depth', 'min_child_weight', 'bagging_freq']:
                 param_dict[key] = int(params[index])
+            else:
+                param_dict[key] = float(params[index])
         # set some non-numeric parameters too
         for key in self.non_numeric_param:
             param_dict[key] = self.non_numeric_param[key]
