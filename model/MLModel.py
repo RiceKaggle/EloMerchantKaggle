@@ -182,6 +182,7 @@ class LGBModel(MLModel):
 
         print(param_dict)
         cv_error,_ = self._train(param_dict)
+        cv_error,_ = self._train(param_dict)
         return cv_error, param_dict
 
     def read_data(self):
@@ -229,7 +230,7 @@ class LGBModel(MLModel):
     def prepare_baysian_optimization(self):
         n_iters = self.bayesian_iteration
         # each bounds corresponding to ['num_leaves','max_depth','min_child_weight','learning_rate','bagging_fraction','feature_fraction','bagging_freq']
-        bounds = [[10, 25], [5, 10], [10, 30], [0.03, 0.08], [0, 0.7], [0, 0.7], [1, 10]]
+        bounds = [[10, 25], [5, 10], [10, 30], [0.03, 0.08], [0.1, 0.7], [0.1, 0.7], [1, 10]]
 
         return {'n_iters': n_iters, 'bounds': np.array(bounds), 'sample_loss': self.sample_loss}
 
