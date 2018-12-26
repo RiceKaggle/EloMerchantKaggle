@@ -12,6 +12,7 @@ from tqdm import tqdm
 import os
 from model.bayesian_optimization import bayesian_optimisation
 
+# add this line to avoid warning of OpenKMP if your system have multiple OpenKMP lib
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
 
 class MLModel(object):
@@ -44,7 +45,7 @@ class LGBModel(MLModel):
     def __init__(self, non_numeric_param=None,
                  objective='regression',debug = False,
                  metric='rmse', bayesian_optimisation=False,
-                 bayesian_iteration = 50,
+                 bayesian_iteration = 50,verbose_eval=True,
                  split_method='KFold', n_splits=5,
                  random_state=2018, num_round=10000,
                  shuffle=True, data_dir="../data",
@@ -60,6 +61,7 @@ class LGBModel(MLModel):
         :param metric:
         :param bayesian_optimisation: if true, use bayesian optimization to search best parameter, otherwise, use grid search
         :param baysian_iteration: num of iterations bayesian optimization run
+        :param verbose_eval
         :param split_method: 'KFold' and 'StratifiedKFold' are available
         :param n_splits: number of fold you want to have in you train/val set
         :param random_state:
@@ -80,6 +82,7 @@ class LGBModel(MLModel):
         self.num_round = num_round
         self.split_method = split_method
         self.bayesian_iteration = bayesian_iteration
+        self.verbose_eval = verbose_eval
         self.bayesian_optimisation = bayesian_optimisation
         self.n_splits = n_splits
         self.random_state = random_state
@@ -89,6 +92,10 @@ class LGBModel(MLModel):
         self.best_param_dir = best_param_dir
         # this can add additional features to the param list
         self.non_numeric_param = {'objective': self.objective, 'metric': self.metric}
+
+        if not verbose_eval:
+            self.non_numeric_param['verbosity'] = -1
+
         self.train_file_name = train_file_name
         self.test_file_name = test_file_name
 
@@ -120,7 +127,7 @@ class LGBModel(MLModel):
 
         # after perdicting with the best parameter, save the best parameter
         with open(os.path.join(self.best_param_dir,best_param_name), 'w') as outputfile:
-            json.dumps(self.so_far_best_params, outputfile)
+            json.dump(self.so_far_best_params, outputfile)
 
         return prediction
 
@@ -226,6 +233,6 @@ class LGBModel(MLModel):
 
 
 if __name__ == '__main__':
-    model = LGBModel(bayesian_optimisation=True)
+    model = LGBModel(bayesian_optimisation=True,debug=True,verbose_eval=False)
     model.train()
     model.predict()
