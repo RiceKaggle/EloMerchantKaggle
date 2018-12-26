@@ -119,18 +119,22 @@ def bayesian_optimisation(n_iters, sample_loss, bounds, x0=None, n_pre_samples=5
 
     x_list = []
     y_list = []
-
+    param_list = []
     n_params = bounds.shape[0]
 
     if x0 is None:
         for params in np.random.uniform(bounds[:, 0], bounds[:, 1], (n_pre_samples, bounds.shape[0])):
             x_list.append(params)
             random_cv, random_param_dict = sample_loss(params)
+
+            print(random_cv)
+            param_list.append(random_param_dict)
             y_list.append(random_cv)
     else:
         for params in x0:
             x_list.append(params)
             random_cv, random_param_dict = sample_loss(params)
+            param_list.append(random_param_dict)
             y_list.append(random_cv)
 
     xp = np.array(x_list)
@@ -145,7 +149,8 @@ def bayesian_optimisation(n_iters, sample_loss, bounds, x0=None, n_pre_samples=5
                                             alpha=alpha,
                                             n_restarts_optimizer=10,
                                             normalize_y=True)
-
+    print(xp)
+    print(yp)
     for n in tqdm(range(n_iters)):
 
         model.fit(xp, yp)
@@ -166,11 +171,12 @@ def bayesian_optimisation(n_iters, sample_loss, bounds, x0=None, n_pre_samples=5
         cv_score, param_dict = sample_loss(next_sample)
 
         # Update lists
-        x_list.append(param_dict)
+        x_list.append(next_sample)
         y_list.append(cv_score)
+        param_list.append(param_dict)
 
         # Update xp and yp
         xp = np.array(x_list)
         yp = np.array(y_list)
 
-    return xp, yp
+    return xp, yp, param_list
