@@ -150,7 +150,6 @@ class LGBModel(MLModel):
 
         print(param_dict)
         cv_error,_ = self._train(param_dict)
-        cv_error,_ = self._train(param_dict)
         return cv_error, param_dict
 
     def read_data(self):

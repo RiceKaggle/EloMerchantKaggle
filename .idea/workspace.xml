@@ -2,11 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="61b8f875-c0c0-4284-8748-721dd2c4a72e" name="Default" comment="First commit">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/model/CatBoostModel.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/model/LGBModel.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/model/XGBoostModel.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/model/FFMModel.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/model/MLModel.py" afterPath="$PROJECT_DIR$/model/MLModel.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/model/CatBoostModel.py" afterPath="$PROJECT_DIR$/model/CatBoostModel.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/model/LGBModel.py" afterPath="$PROJECT_DIR$/model/LGBModel.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/model/XGBoostModel.py" afterPath="$PROJECT_DIR$/model/XGBoostModel.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/preprocess/Dataset.py" afterPath="$PROJECT_DIR$/preprocess/Dataset.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/util/util.py" afterPath="$PROJECT_DIR$/util/util.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -16,29 +18,18 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/EloMerchantKaggle$Dataset.coverage" NAME="Dataset Coverage Results" MODIFIED="1545598470837" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/preprocess" />
+    <SUITE FILE_PATH="coverage/EloMerchantKaggle$Dataset.coverage" NAME="Dataset Coverage Results" MODIFIED="1545949541705" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/preprocess" />
     <SUITE FILE_PATH="coverage/EloMerchantKaggle$MLModel.coverage" NAME="MLModel Coverage Results" MODIFIED="1545789009228" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/model" />
+    <SUITE FILE_PATH="coverage/EloMerchantKaggle$FFMModel.coverage" NAME="FFMModel Coverage Results" MODIFIED="1545972005479" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/model" />
     <SUITE FILE_PATH="coverage/EloMerchantKaggle$bayesian_optimization.coverage" NAME="bayesian_optimization Coverage Results" MODIFIED="1545783241177" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/model" />
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="MLModel.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/model/MLModel.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="105">
-              <caret line="6" column="0" lean-forward="false" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
-              <folding>
-                <element signature="e#0#30#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="LGBModel.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="LGBModel.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/model/LGBModel.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="162">
-              <caret line="9" column="15" lean-forward="false" selection-start-line="9" selection-start-column="15" selection-end-line="9" selection-end-column="15" />
+            <state relative-caret-position="3058">
+              <caret line="205" column="7" lean-forward="false" selection-start-line="205" selection-start-column="7" selection-end-line="205" selection-end-column="79" />
               <folding>
                 <element signature="e#0#33#0" expanded="true" />
               </folding>
@@ -49,9 +40,21 @@
       <file leaf-file-name="CatBoostModel.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/model/CatBoostModel.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+            <state relative-caret-position="54">
+              <caret line="3" column="21" lean-forward="false" selection-start-line="3" selection-start-column="21" selection-end-line="3" selection-end-column="21" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="FFMModel.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/model/FFMModel.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="360">
+              <caret line="120" column="136" lean-forward="false" selection-start-line="120" selection-start-column="136" selection-end-line="120" selection-end-column="136" />
+              <folding>
+                <element signature="e#0#19#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -59,60 +62,8 @@
       <file leaf-file-name="XGBoostModel.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/model/XGBoostModel.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="temp.txt" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/best_param/temp.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="engine.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../../../codelibrary/anaconda2/envs/kaggle/lib/python3.4/site-packages/lightgbm/engine.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1818">
-              <caret line="113" column="0" lean-forward="false" selection-start-line="113" selection-start-column="0" selection-end-line="113" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="basic.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../../../codelibrary/anaconda2/envs/kaggle/lib/python3.4/site-packages/lightgbm/basic.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="38592">
-              <caret line="2160" column="0" lean-forward="false" selection-start-line="2160" selection-start-column="0" selection-end-line="2160" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="bayesian_optimization.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/model/bayesian_optimization.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2250">
-              <caret line="125" column="82" lean-forward="false" selection-start-line="125" selection-start-column="69" selection-end-line="125" selection-end-column="82" />
-              <folding>
-                <element signature="e#56#74#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="gpr.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../../../codelibrary/anaconda2/envs/kaggle/lib/python3.4/site-packages/sklearn/gaussian_process/gpr.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4014">
-              <caret line="233" column="0" lean-forward="false" selection-start-line="233" selection-start-column="0" selection-end-line="233" selection-end-column="0" />
+            <state relative-caret-position="54">
+              <caret line="3" column="18" lean-forward="false" selection-start-line="3" selection-start-column="18" selection-end-line="3" selection-end-column="18" />
               <folding />
             </state>
           </provider>
@@ -121,8 +72,8 @@
       <file leaf-file-name="Dataset.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/preprocess/Dataset.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4248">
-              <caret line="236" column="0" lean-forward="false" selection-start-line="236" selection-start-column="0" selection-end-line="236" selection-end-column="0" />
+            <state relative-caret-position="1139">
+              <caret line="333" column="63" lean-forward="false" selection-start-line="333" selection-start-column="48" selection-end-line="333" selection-end-column="63" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
@@ -148,6 +99,10 @@
       <find>check_X_y</find>
       <find>json</find>
       <find>dump</find>
+      <find>shape</find>
+      <find>ela</find>
+      <find>max</find>
+      <find>category</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -157,13 +112,14 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/pipeline/EloPipeline.py" />
-        <option value="$PROJECT_DIR$/util/util.py" />
-        <option value="$PROJECT_DIR$/preprocess/Dataset.py" />
         <option value="$PROJECT_DIR$/model/bayesian_optimization.py" />
+        <option value="$PROJECT_DIR$/model/MLModel.py" />
         <option value="$PROJECT_DIR$/model/CatBoostModel.py" />
         <option value="$PROJECT_DIR$/model/XGBoostModel.py" />
-        <option value="$PROJECT_DIR$/model/MLModel.py" />
+        <option value="$PROJECT_DIR$/util/util.py" />
         <option value="$PROJECT_DIR$/model/LGBModel.py" />
+        <option value="$PROJECT_DIR$/preprocess/Dataset.py" />
+        <option value="$PROJECT_DIR$/model/FFMModel.py" />
       </list>
     </option>
   </component>
@@ -173,10 +129,9 @@
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="y" value="23" />
+  <component name="ProjectFrameBounds" fullScreen="true">
     <option name="width" value="1440" />
-    <option name="height" value="877" />
+    <option name="height" value="900" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -211,6 +166,7 @@
     </navigator>
     <panes>
       <pane id="Scratches" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -257,7 +213,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -266,13 +221,13 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/best_param" />
-      <recent name="$PROJECT_DIR$/data" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/data" />
       <recent name="$PROJECT_DIR$" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/data" />
+      <recent name="$PROJECT_DIR$/best_param" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -287,7 +242,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.MLModel">
+  <component name="RunManager" selected="Python.FFMModel">
     <configuration name="Dataset" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -302,6 +257,24 @@
       <module name="EloMerchantKaggle" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/preprocess/Dataset.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+    </configuration>
+    <configuration name="FFMModel" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/model" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="EloMerchantKaggle" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/model/FFMModel.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -342,16 +315,18 @@
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
     </configuration>
-    <list size="3">
+    <list size="4">
       <item index="0" class="java.lang.String" itemvalue="Python.Dataset" />
       <item index="1" class="java.lang.String" itemvalue="Python.MLModel" />
       <item index="2" class="java.lang.String" itemvalue="Python.bayesian_optimization" />
+      <item index="3" class="java.lang.String" itemvalue="Python.FFMModel" />
     </list>
     <recent_temporary>
-      <list size="3">
-        <item index="0" class="java.lang.String" itemvalue="Python.MLModel" />
-        <item index="1" class="java.lang.String" itemvalue="Python.bayesian_optimization" />
-        <item index="2" class="java.lang.String" itemvalue="Python.Dataset" />
+      <list size="4">
+        <item index="0" class="java.lang.String" itemvalue="Python.FFMModel" />
+        <item index="1" class="java.lang.String" itemvalue="Python.Dataset" />
+        <item index="2" class="java.lang.String" itemvalue="Python.MLModel" />
+        <item index="3" class="java.lang.String" itemvalue="Python.bayesian_optimization" />
       </list>
     </recent_temporary>
   </component>
@@ -377,20 +352,19 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1440" height="877" extended-state="6" />
-    <editor active="true" />
+    <frame x="0" y="0" width="1440" height="900" extended-state="0" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2639485" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16380544" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.0" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.31197098" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.30983117" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.30983117" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -416,88 +390,11 @@
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
-      <option name="time" value="7" />
+      <option name="time" value="10" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/../../../codelibrary/anaconda2/envs/kaggle/lib/python3.4/site-packages/lightgbm/engine.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1818">
-          <caret line="113" column="0" lean-forward="false" selection-start-line="113" selection-start-column="0" selection-end-line="113" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../../codelibrary/anaconda2/envs/kaggle/lib/python3.4/site-packages/lightgbm/basic.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="38880">
-          <caret line="2160" column="0" lean-forward="false" selection-start-line="2160" selection-start-column="0" selection-end-line="2160" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/model/bayesian_optimization.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2142">
-          <caret line="125" column="82" lean-forward="false" selection-start-line="125" selection-start-column="69" selection-end-line="125" selection-end-column="82" />
-          <folding>
-            <element signature="e#56#74#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../../codelibrary/anaconda2/envs/kaggle/lib/python3.4/site-packages/sklearn/gaussian_process/gpr.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4014">
-          <caret line="233" column="0" lean-forward="false" selection-start-line="233" selection-start-column="0" selection-end-line="233" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../../codelibrary/anaconda2/envs/kaggle/lib/python3.4/site-packages/numpy/core/fromnumeric.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="52740">
-          <caret line="2941" column="0" lean-forward="false" selection-start-line="2941" selection-start-column="0" selection-end-line="2941" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/preprocess/Dataset.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4176">
-          <caret line="236" column="0" lean-forward="false" selection-start-line="236" selection-start-column="0" selection-end-line="236" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/model/MLModel.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#30#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../../codelibrary/anaconda2/envs/kaggle/lib/python3.4/codecs.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5508">
-          <caret line="306" column="0" lean-forward="false" selection-start-line="306" selection-start-column="0" selection-end-line="306" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../../codelibrary/anaconda2/envs/kaggle/lib/python3.4/site-packages/lightgbm/basic.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="13230">
-          <caret line="751" column="0" lean-forward="false" selection-start-line="751" selection-start-column="0" selection-end-line="751" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../../../codelibrary/anaconda2/envs/kaggle/lib/python3.4/site-packages/lightgbm/engine.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1818">
@@ -517,9 +414,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="54">
           <caret line="4" column="0" lean-forward="false" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#29#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -528,7 +422,7 @@
         <state relative-caret-position="2178">
           <caret line="127" column="0" lean-forward="false" selection-start-line="127" selection-start-column="0" selection-end-line="127" selection-end-column="0" />
           <folding>
-            <element signature="e#56#74#0" expanded="true" />
+            <element signature="e#56#74#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -571,9 +465,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="18">
           <caret line="2" column="24" lean-forward="false" selection-start-line="2" selection-start-column="4" selection-end-line="2" selection-end-column="24" />
-          <folding>
-            <element signature="e#0#29#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -582,7 +473,7 @@
         <state relative-caret-position="2862">
           <caret line="163" column="30" lean-forward="false" selection-start-line="163" selection-start-column="22" selection-end-line="163" selection-end-column="30" />
           <folding>
-            <element signature="e#56#74#0" expanded="true" />
+            <element signature="e#56#74#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -629,16 +520,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3312">
           <caret line="187" column="0" lean-forward="false" selection-start-line="187" selection-start-column="0" selection-end-line="187" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/util/util.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="216">
-          <caret line="12" column="0" lean-forward="false" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#29#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -705,7 +586,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="52740">
           <caret line="2941" column="0" lean-forward="false" selection-start-line="2941" selection-start-column="0" selection-end-line="2941" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -713,7 +593,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="4014">
           <caret line="233" column="0" lean-forward="false" selection-start-line="233" selection-start-column="0" selection-end-line="233" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -725,28 +604,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/model/bayesian_optimization.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2250">
-          <caret line="125" column="82" lean-forward="false" selection-start-line="125" selection-start-column="69" selection-end-line="125" selection-end-column="82" />
-          <folding>
-            <element signature="e#56#74#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/preprocess/Dataset.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4248">
-          <caret line="236" column="0" lean-forward="false" selection-start-line="236" selection-start-column="0" selection-end-line="236" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/data/df_test_agg1.csv" />
-    <entry file="file://$PROJECT_DIR$/data/df_train_agg1.csv" />
     <entry file="file://$PROJECT_DIR$/best_param/lgb_param.json" />
     <entry file="file://$PROJECT_DIR$/submission/submission_lgb.csv" />
     <entry file="file://$PROJECT_DIR$/../../../codelibrary/anaconda2/envs/kaggle/lib/python3.4/site-packages/lightgbm/engine.py">
@@ -765,17 +622,27 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/model/CatBoostModel.py">
+    <entry file="file://$PROJECT_DIR$/model/bayesian_optimization.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        <state relative-caret-position="2142">
+          <caret line="125" column="82" lean-forward="false" selection-start-line="125" selection-start-column="69" selection-end-line="125" selection-end-column="82" />
+          <folding>
+            <element signature="e#56#74#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/util/util.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="252">
+          <caret line="15" column="0" lean-forward="false" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/model/MLModel.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
+        <state relative-caret-position="108">
           <caret line="6" column="0" lean-forward="false" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
           <folding>
             <element signature="e#0#30#0" expanded="true" />
@@ -783,7 +650,23 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/model/XGBoostModel.py">
+    <entry file="file://$PROJECT_DIR$/../../../codelibrary/anaconda2/envs/kaggle/lib/python3.4/site-packages/xlearn/xlearn.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="217">
+          <caret line="223" column="8" lean-forward="false" selection-start-line="223" selection-start-column="8" selection-end-line="223" selection-end-column="8" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/train.csv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="18" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/test.csv">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
@@ -791,12 +674,102 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/data/alltestffm.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/alltrainffm.txt_1">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pretrained_model/model_output.out">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/alltrainffm.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-24191">
+          <caret line="8515" column="13" lean-forward="false" selection-start-line="8515" selection-start-column="13" selection-end-line="8515" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/submission/ffmoutput.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-547151">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/preprocess/Dataset.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1139">
+          <caret line="333" column="63" lean-forward="false" selection-start-line="333" selection-start-column="48" selection-end-line="333" selection-end-column="63" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/df_test_agg1.csv">
+      <provider selected="true" editor-type-id="LargeFileEditor">
+        <state relative-caret-position="0">
+          <caret line="0" column="299" lean-forward="false" selection-start-line="0" selection-start-column="281" selection-end-line="0" selection-end-column="299" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/XGBoostModel.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="54">
+          <caret line="3" column="18" lean-forward="false" selection-start-line="3" selection-start-column="18" selection-end-line="3" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/df_train_agg1.csv">
+      <provider selected="true" editor-type-id="LargeFileEditor">
+        <state relative-caret-position="0">
+          <caret line="0" column="266" lean-forward="false" selection-start-line="0" selection-start-column="247" selection-end-line="0" selection-end-column="266" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/model/LGBModel.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="162">
-          <caret line="9" column="15" lean-forward="false" selection-start-line="9" selection-start-column="15" selection-end-line="9" selection-end-column="15" />
+        <state relative-caret-position="3058">
+          <caret line="205" column="7" lean-forward="false" selection-start-line="205" selection-start-column="7" selection-end-line="205" selection-end-column="79" />
           <folding>
             <element signature="e#0#33#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/CatBoostModel.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="54">
+          <caret line="3" column="21" lean-forward="false" selection-start-line="3" selection-start-column="21" selection-end-line="3" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/FFMModel.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="120" column="136" lean-forward="false" selection-start-line="120" selection-start-column="136" selection-end-line="120" selection-end-column="136" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
           </folding>
         </state>
       </provider>

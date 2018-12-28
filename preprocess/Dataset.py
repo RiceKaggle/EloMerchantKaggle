@@ -12,6 +12,7 @@ class Dataset(object):
         self.hist_trans_path = os.path.join(base_dir, hist_trans_path)
         self.new_trans_path = os.path.join(base_dir, new_trans_path)
         self.new_merc_path = os.path.join(base_dir, new_merc_path)
+        self.base_dir = base_dir
 
     def load_train(self):
         print('load train data ...')
@@ -243,6 +244,155 @@ class Dataset(object):
         cate_features = [col for col in df_train.columns.values if 'feature' in col]
 
         return train_X, train_Y, test, features, cate_features
+
+    def format_transformer(self, unwanted = None ,fields = None,
+                           train_file_name = 'alltrainffm.txt',
+                           test_file_name = 'alltestffm.txt',
+                           numeric_features = None,cate_feature=None):
+        '''
+        :param unwanted: unwanted list
+        :param fields: fields to select
+        :param fields: which field to select
+        :param train_file_name: training file name
+        :param test_file_name: test file name
+        :param numeric_features
+        :param cate_feature
+        :return: processed training and testing dataset, format is <label><feature1>:<value1><feature2>:<value2>, for classification label is an integer
+        indicating the class label, for regression, label is a the target value which can be any real number
+        '''
+        # add an extra column to the test_df
+
+        train_df = self.load_train()
+        test_df = self.load_test()
+
+        unwanted = ['card_id','first_active_month','target']
+
+
+
+        test_df.insert(test_df.shape[1],'target',0)
+
+
+        # concat them together
+        train_test_df = pd.concat([train_df, test_df])
+        train_test_df = train_test_df.reset_index(drop = True)
+
+
+        # default use all the features as candidate, select the features that has lower unique value which can be treated as categoricial data
+
+        features = []
+        if fields != None:
+            for col in train_test_df.columns.values:
+                if col in fields and col not in unwanted:
+                    features.append(col)
+        else:
+            for col in train_test_df.columns.values:
+                if col in unwanted:
+                    continue
+                else:
+                    features.append(col)
+
+        for col in features:
+            train_no = len(train_test_df.loc[:train_df.shape[0], col].unique())
+            test_no = len(train_test_df.loc[train_df.shape[0]:, col].unique())
+            if train_no >= 30 or test_no >= 30:
+                train_test_df.loc[:, col] = pd.cut(train_test_df.loc[:, col], 30, labels=False)
+
+
+        train = train_test_df.loc[:train_df.shape[0]].copy()
+        test = train_test_df.loc[train_df.shape[0]:].copy()
+
+        categories = features
+
+        print(categories)
+
+        if numeric_features != None:
+            numerics = numeric_features
+        else:
+            numerics = []
+
+        currentcode = len(numerics)
+
+        catdict = {}
+        catcode = {}
+
+        for x in numerics:
+            catdict[x] = 0
+        for x in categories:
+            catdict[x] = 1
+
+        print(catdict)
+
+
+
+        # transform training file
+        num_rows = len(train)
+        if fields != None:
+            num_cols = len(fields)
+        else:
+            num_cols = len(features)
+
+        train_path = os.path.join(self.base_dir,train_file_name)
+        with open(train_path,'w') as text_file:
+            for index, row in enumerate(range(num_rows)):
+                if ((index % 100000) == 0):
+                    print('Train Row', index)
+                datastring = ""
+                datarow = train.iloc[row].to_dict()
+                datastring += str(datarow['target'])
+
+                for i,x in enumerate(catdict.keys()):
+                    # if it is numeric feature
+                    if catdict[x] == 0:
+                        datastring = datastring + " " + str(i) + ":" + str(i) + ":" + str(datarow[x])
+                    else:
+                        if x not in catcode:
+                            catcode[x] = {}
+                            currentcode += 1
+                            catcode[x][datarow[x]] = currentcode
+                        elif datarow[x] not in catcode[x]:
+                            currentcode += 1
+                            catcode[x][datarow[x]] = currentcode
+
+                        code = catcode[x][datarow[x]]
+                        datastring = datastring + " " + str(i) + ":" + str(int(code)) + ":1"
+                datastring += '\n'
+                text_file.write(datastring)
+
+
+        # transform test file
+        num_rows = len(test)
+        if fields != None:
+            num_cols = len(fields)
+        else:
+            num_cols = len(features)
+
+        test_path = os.path.join(self.base_dir,test_file_name)
+        with open(test_path, 'w') as text_file:
+            for index, row in enumerate(range(num_rows)):
+                if ((index % 100000) == 0):
+                    print('Test Row', index)
+                datastring = ""
+                datarow = train.iloc[row].to_dict()
+                datastring += str(datarow['target'])
+
+                for i,x in enumerate(catdict.keys()):
+                    # if it is numeric feature
+                    if catdict[x] == 0:
+                        datastring = datastring + " " + str(i) + ":" + str(i) + ":" + str(datarow[x])
+                    else:
+                        if x not in catcode:
+                            catcode[x] = {}
+                            currentcode += 1
+                            catcode[x][datarow[x]] = currentcode
+                        elif datarow[x] not in catcode[x]:
+                            currentcode += 1
+                            catcode[x][datarow[x]] = currentcode
+
+                        code = catcode[x][datarow[x]]
+                        datastring = datastring + " " + str(i) + ":" + str(int(code)) + ":1"
+                datastring += '\n'
+                text_file.write(datastring)
+        print('successfully transform the data to libSvm format ...')
 
 # test
 if __name__ == '__main__':
