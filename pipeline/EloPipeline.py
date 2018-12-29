@@ -12,21 +12,18 @@ class EloPipeline(object):
         self.data_dir = data_dir
 
     def get_train_target(self):
-        if os.path.isfile(os.path.join(self.data_dir,'target.csv')):
-            return pd.read_csv(os.path.join(self.data_dir,'target.csv'))
-        else:
-            train_df = pd.read_csv(os.path.join(self.data_dir, 'train_agg_id1.csv'))
-            target = train_df['target']
-            target.to_csv(os.path.join(self.data_dir,'target.csv'))
-            return target
+        train_df = pd.read_csv(os.path.join(self.data_dir, 'train_agg_id1.csv'))
+        test_df = pd.read_csv(os.path.join(self.data_dir, 'test_agg_id1.csv'))
+        target = train_df['target']
+        target.to_csv(os.path.join(self.data_dir, 'target.csv'))
+        return target, test_df
 
     def stack_model(self, prediction_list_name,
                     method = "BayesianRidge",
                     split_method = "kFold",
                     n_splits = 5,
                     random_state = 4520):
-
-        target = os.path.join(self.data_dir,'target.csv')
+        target, test_df= self.get_train_target()
 
         if len(prediction_list_name) == 0:
             print("no prediction result ...")
@@ -52,7 +49,7 @@ class EloPipeline(object):
             train_stack = np.vstack(oof_list).transpose()
             test_stack = np.vstack(prediction_list).transpose()
 
-            if split_method == 'KFold':
+            if split_method == 'kFold':
                 kfold = KFold(n_splits=n_splits, random_state=random_state)
                 iterator = enumerate(kfold.split(train_stack))
 
@@ -78,19 +75,22 @@ class EloPipeline(object):
                 oof_stack[val_idx] = clf.predict(val_data)
                 predictions_stack += clf.predict(test_stack) / 5
 
-            np.sqrt(mean_squared_error(target.values, oof_stack))
+            print("cv score : ",np.sqrt(mean_squared_error(target.values, oof_stack)))
             print('save stacked oof file and prediction file ...')
-            oof_file_name = '_'.join(prediction_list).strip()
+            oof_file_name = '_'.join(prediction_list_name).strip()
             oof_file_name = 'oof_merge_'+oof_file_name
-            pred_file_name = '_'.join(prediction_list).strip()
+            pred_file_name = '_'.join(prediction_list_name).strip()
             pred_file_name = 'merge_'+pred_file_name
-            predictions_stack.to_csv(os.path.join(self.submission_dir,pred_file_name), index=False)
+
+            stack_result = pd.DataFrame({'card_id':test_df['card_id']})
+            stack_result['target'] = predictions_stack
+            stack_result.to_csv(os.path.join(self.submission_dir,pred_file_name), index=False)
 
             oof_stack = pd.DataFrame({'target': oof_stack})
             oof_stack.to_csv(os.path.join(self.submission_dir + '/oof', 'oof_' + oof_file_name), index=False)
             print('stacked oof and prediction file save successfully ...')
 
-if __name__ is "__main__":
+if __name__ == "__main__":
     pipeline = EloPipeline()
     predict_list = ['lgb_id1.csv','cat_id4.csv','lgb_id2.csv']
     pipeline.stack_model(predict_list)
