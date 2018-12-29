@@ -115,10 +115,14 @@ class FFMModel(MLModel):
 
 if __name__ == "__main__":
 
-    dataset = Dataset('df_train_agg1.csv', 'df_test_agg1.csv')
+    dataset = Dataset(train_path='df_train_agg1.csv', test_path='df_test_agg1.csv')
     dataset.format_transformer(train_file_name='alltrainffm_agg1.txt',
                                test_file_name='alltestffm_agg1.txt',
-                               fields=['feature_1', 'feature_2', 'feature_3', 'elapsed_time', 'hist_month_lag_max', 'hist_category_1_sum'])
+                               fields=['feature_1', 'feature_2', 'feature_3', 'elapsed_time', 'hist_month_lag_max', 'hist_category_1_sum',
+                                       'hist_weekend_sum','hist_category_3_mean_mean','hist_category_1_sum','hist_category_1_mean',
+                                       'hist_authorized_flag_sum','hist_authorized_flag_mean','hist_purchase_date_max'])
 
     model = FFMModel(debug=True, train_name = 'alltrainffm_agg1.txt', test_name='alltestffm_agg1.txt')
     model.train()
+
+

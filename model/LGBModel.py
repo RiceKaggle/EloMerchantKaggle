@@ -68,20 +68,30 @@ class LGBModel(MLModel):
         self.test_file_name = test_file_name
 
     def predict_with_best_param(self, file_name = 'submission_lgb.csv', best_param_name = 'lgb_param.json'):
-
+        self.read_data()
         param_path = os.path.join(self.best_param_dir,best_param_name)
-        print('load best param so far form {} ...'.format(param_path))
+        print('lgb::: load best param so far form {} ...'.format(param_path))
         with open(param_path) as readfile:
             self.so_far_best_params = json.loads(readfile)
-        print('load successfully, begin to train and prediction ...')
+        print('lgb::: load successfully, begin to train and prediction ...')
         cv_error, prediction = self._train(params=self.so_far_best_params, predict=True)
 
-        print('best cv_error is {} ...'.format(cv_error))
+        print('lgb::: best cv_error is {} ...'.format(cv_error))
+        result = pd.DataFrame({'card_id': self.test['card_id']})
+        result['target'] = prediction
+        result.to_csv(os.path.join(self.submission_dir, file_name), index=False)
+        print('lgb::: save the prediction result in {} ...'.format(os.path.join(self.submission_dir, file_name)))
+
+        return prediction
+
+    def predict_with_param(self, param, file_name = 'prediction_lgb_id_default.csv'):
+        self.read_data()
+        cv_error, prediction = self._train(params=param, predict= True)
+        print('cv_error with provided parameters is {} ...'.format(cv_error))
         result = pd.DataFrame({'card_id': self.test['card_id']})
         result['target'] = prediction
         result.to_csv(os.path.join(self.submission_dir, file_name), index=False)
         print('save the prediction result in {} ...'.format(os.path.join(self.submission_dir, file_name)))
-
         return prediction
 
 

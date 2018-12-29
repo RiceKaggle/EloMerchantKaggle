@@ -5,7 +5,7 @@ import datetime
 import gc
 
 class Dataset(object):
-    def __init__(self,  train_path, test_path, hist_trans_path = 'historical_transactions.csv', new_trans_path='new_merchant_transactions.csv',
+    def __init__(self,  train_path = 'train.csv', test_path = 'test.csv', hist_trans_path = 'historical_transactions.csv', new_trans_path='new_merchant_transactions.csv',
                  new_merc_path='merchants.csv', base_dir='../data'):
         self.train_path = os.path.join(base_dir,train_path)
         self.test_path = os.path.join(base_dir,test_path)
@@ -394,11 +394,45 @@ class Dataset(object):
                 text_file.write(datastring)
         print('successfully transform the data to libSvm format ...')
 
+    def ffmtxt2csv(self, file_name = '../submission/ffmoutput.txt', dest_name = '../submission/ffmoutput.csv'):
+        test_df = pd.read_csv(self.test_path)
+        #print("test_df {}".format(len(test_df)))
+
+        submission = pd.read_csv(file_name)
+        #print("submission {}".format(len(submission)))
+
+        self.recoverdf(submission)
+
+        final_submission = pd.DataFrame({'card_id':test_df['card_id']})
+        #print("final_submission {}".format(len(final_submission)))
+        final_submission['target'] = submission.loc[:,submission.columns.values[0]]
+        final_submission.to_csv(dest_name,index=False)
+
+
+
+
+    def recoverdf(self,df):
+        first_value = df.columns.values[0]
+
+        if 'target' not in first_value:
+            # df.rename({first_value: 'target'}, axis='columns', inplace=True)
+            df.loc[-1] = float(first_value)
+            df.index = df.index + 1
+            df.sort_index(inplace=True)
+
+
 # test
 if __name__ == '__main__':
-    dataset = Dataset('train.csv','test.csv')
+    # dataset = Dataset('train.csv','test.csv')
+    #
+    # train_X, train_Y, test = dataset.preprocess(reload=True)
 
-    train_X, train_Y, test = dataset.preprocess(reload=True)
+    dataset = Dataset('df_train_agg1.csv','df_test_agg1.csv')
+    dataset.ffmtxt2csv()
+
+
+
+
 
 
 
