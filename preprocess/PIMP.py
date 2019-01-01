@@ -96,7 +96,7 @@ class PIMP(FeatureSelection):
                 print('\b', end='', flush=True)
             # Display current run and time used
             spent = (time.time() - start) / 60
-            dsp = 'Done with %4d of %4d (Spent %5.1f min)' % (i + 1, nb_runs, spent)
+            dsp = 'Done with %4d of %4d (Spent %5.1f min)' % (i + 1, self.nb_runs, spent)
             print(dsp, end='', flush=True)
         return null_imp_df
 
