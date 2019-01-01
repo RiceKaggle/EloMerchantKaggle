@@ -11,8 +11,9 @@ import seaborn as sns
 import os
 
 class PIMP(FeatureSelection):
-    def __init__(self, feature_score_name):
+    def __init__(self, feature_score_name,nb_runs=80):
         super(PIMP, self).__init__(feature_score_name)
+        self.nb_runs = nb_runs
 
     def load_data(self):
         dataset = Dataset('train_agg_id1.csv', 'test_agg_id1.csv')
@@ -79,11 +80,11 @@ class PIMP(FeatureSelection):
 
     def get_null_importance(self):
         null_imp_df = pd.DataFrame()
-        nb_runs = 80
+
         import time
         start = time.time()
         dsp = ''
-        for i in range(nb_runs):
+        for i in range(self.nb_runs):
             # Get current run importances
             imp_df = self.get_feature_importances(self.train_X, True, self.target,
                                                   train_features=self.features, categorical_feats= self.cate_features)
@@ -100,9 +101,6 @@ class PIMP(FeatureSelection):
         return null_imp_df
 
     def get_feature_score(self):
-        if self.actual_imp_df == None or self.null_imp_df == None:
-            print("actual_imp_df and null_imp_df value can not be null ...")
-            return
         feature_scores = []
         for _f in self.actual_imp_df['feature'].unique():
             f_null_imps_gain = self.null_imp_df.loc[self.null_imp_df['feature'] == _f, 'importance_gain'].values
@@ -131,6 +129,27 @@ class PIMP(FeatureSelection):
         ax.set_title('Feature scores wrt gain importances', fontweight='bold', fontsize=14)
         plt.tight_layout()
 
+        return scores_df
+
+    def show_score_df(self):
+        if os.path.isfile(os.path.join('./feature_score',self.feature_score_name)):
+            score = pd.read_csv(os.path.join('./feature_score',self.feature_score_name))
+
+            score_split = score.sort_values(by = ['split_score'], ascending=False).reset_index(drop=True)
+            score_gain = score.sort_values(by = ['gain_score'], ascending=False).reset_index(drop=True)
+            score_both = score.sort_values(by = ['split_score','gain_score'], ascending=False).reset_index(drop=True)
+            return score_split, score_gain, score_both
+
+
+        else:
+            print("no score file exist ...")
 if __name__ == "__main__":
     pimp = PIMP("pimp_score.csv")
     pimp.permutation_importance()
+    score_split, score_gain, score_both = pimp.show_score_df()
+    print("score_split")
+    print(score_split.head())
+    print("score_gain")
+    print(score_gain.head())
+    print("score_both")
+    print(score_both.head())
