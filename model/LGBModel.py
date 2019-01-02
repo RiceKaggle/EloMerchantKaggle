@@ -8,6 +8,7 @@ import pandas as pd
 from preprocess.Dataset import Dataset
 from model.bayesian_optimization import bayesian_optimisation
 import os, json
+from preprocess.PIMP import PIMP
 
 class LGBModel(MLModel):
     def __init__(self, non_numeric_param=None,
@@ -22,7 +23,6 @@ class LGBModel(MLModel):
                  train_file_name='df_train_agg1.csv',
                  test_file_name='df_test_agg1.csv'):
         '''
-
         :param non_numeric_param: non-numeric parameter, do not optimize these parameter
         :param objective: the objective of the model
         :param debug: if set debug equals to true, use debug model (load part of training and test data)
@@ -40,7 +40,6 @@ class LGBModel(MLModel):
         :param best_param_dir: load the best param form best_param_dir
         :param train_file_name: processed training file in data_dir
         :param test_file_name: test file in data_dir
-
         '''
         super(LGBModel, self).__init__()
         self.submission_dir = submission_dir
@@ -86,6 +85,11 @@ class LGBModel(MLModel):
 
     def predict_with_param(self, param, file_name = 'prediction_lgb_id_default.csv'):
         self.read_data()
+        self.select_important_feature()
+
+        print(self.train_features)
+
+
         cv_error, prediction = self._train(params=param, predict= True)
         print('cv_error with provided parameters is {} ...'.format(cv_error))
         result = pd.DataFrame({'card_id': self.test['card_id']})
@@ -168,6 +172,20 @@ class LGBModel(MLModel):
         self.train_X, self.train_Y, self.test, self.train_features, self.cate_features = data_set.preprocess(
             reload=True)
 
+
+    def select_important_feature(self):
+        pimp = PIMP("pimp_score.csv", corr_score_name='corr_score.csv')
+        score_split, score_gain, score_both, corr_score = pimp.show_score_df(feature_dir='../preprocess/feature_score')
+        print(score_split.loc[score_split['feature']=='feature_1','split_score'] > 0)
+
+        features = [_f for _f in score_split['feature'].values if (score_split.loc[score_split['feature']==_f,'gain_score'] > 0).bool()]
+        # features = [_f for _f in corr_score['feature'].values if
+        #             (corr_score.loc[corr_score['feature'] == _f, 'split_score'] > 0).bool()]
+        self.train_features = features
+        self.cate_features = [_c for _c in self.cate_features if _c in features]
+
+
+
     # overload the train method
     def train(self, params_list=None):
         self.read_data()
@@ -214,5 +232,21 @@ class LGBModel(MLModel):
 
 if __name__ == '__main__':
     model = LGBModel(bayesian_optimisation=True,debug=False,verbose_eval=False)
-    model.train()
-    model.predict()
+    # model.train()
+    # model.predict()
+    param = {'num_leaves': 31,
+             'min_data_in_leaf': 32,
+             'objective': 'regression',
+             'max_depth': -1,
+             'learning_rate': 0.005,
+             "min_child_samples": 20,
+             "boosting": "gbdt",
+             "feature_fraction": 0.9,
+             "bagging_freq": 1,
+             "bagging_fraction": 0.9,
+             "bagging_seed": 11,
+             "metric": 'rmse',
+             "lambda_l1": 0.1,
+             "nthread": 4,
+             "verbosity": -1}
+    model.predict_with_param(param, file_name='lgb_id7.csv')

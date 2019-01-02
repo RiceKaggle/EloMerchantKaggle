@@ -138,16 +138,16 @@ class PIMP(FeatureSelection):
 
         return scores_df, corr_scores_df
 
-    def show_score_df(self):
-        if os.path.isfile(os.path.join('./feature_score',self.feature_score_name)):
-            score = pd.read_csv(os.path.join('./feature_score',self.feature_score_name))
+    def show_score_df(self, feature_dir = './feature_score'):
+        if os.path.isfile(os.path.join(feature_dir,self.feature_score_name)):
+            score = pd.read_csv(os.path.join(feature_dir,self.feature_score_name))
 
             score_split = score.sort_values(by = ['split_score'], ascending=False).reset_index(drop=True)
             score_gain = score.sort_values(by = ['gain_score'], ascending=False).reset_index(drop=True)
             score_both = score.sort_values(by = ['split_score','gain_score'], ascending=False).reset_index(drop=True)
 
 
-            corr_score = pd.read_csv(os.path.join('./feature_score',self.corr_score_name))
+            corr_score = pd.read_csv(os.path.join(feature_dir,self.corr_score_name))
 
             return score_split, score_gain, score_both, corr_score
         else:
@@ -161,10 +161,10 @@ class PIMP(FeatureSelection):
         fig = plt.figure(figsize=(16,16))
         gs = gridspec.GridSpec(1,2)
         ax = plt.subplot(gs[0,0])
-        sns.barplot(x='split_score', y = 'features', data = df.sort_values(by=['split_score'], ascending=False).iloc[0:70], ax= ax)
+        sns.barplot(x='split_score', y = 'feature', data = df.sort_values(by=['split_score'], ascending=False).iloc[0:70], ax= ax)
         ax.set_title('Feature scores wrt split importances', fontweight='bold', fontsize=14)
-        ax = plt.subplot([0,1])
-        sns.barplot(x='gain_score', y='features', data=df.sort_values(by=['gain_score'],ascending=False).iloc[0:70],ax=ax)
+        ax = plt.subplot(gs[0,1])
+        sns.barplot(x='gain_score', y='feature', data=df.sort_values(by=['gain_score'],ascending=False).iloc[0:70],ax=ax)
         ax.set_title('Feature scores wrt gain importances', fontweight='bold', fontsize=14)
         plt.tight_layout()
         plt.suptitle("Features' split and gain scores", fontweight='bold', fontsize=16)
@@ -172,15 +172,17 @@ class PIMP(FeatureSelection):
 
 
 
+
 if __name__ == "__main__":
-    pimp = PIMP("pimp_score.csv")
-    pimp.permutation_importance()
+    pimp = PIMP("pimp_score.csv",corr_score_name='corr_score.csv')
+    #pimp.permutation_importance()
     score_split, score_gain, score_both, corr_score = pimp.show_score_df()
-    print("score_split")
-    print(score_split.head())
-    print("score_gain")
-    print(score_gain.head())
-    print("score_both")
-    print(score_both.head())
-    print("corr_score")
-    print(corr_score.head())
+    # print("score_split")
+    # print(score_split.head())
+    # print("score_gain")
+    # print(score_gain.head())
+    # print("score_both")
+    # print(score_both.head())
+    # print("corr_score")
+    # print(corr_score.head())
+    pimp.plot_feature_score(score_both)
