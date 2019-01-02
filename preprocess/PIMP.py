@@ -11,9 +11,10 @@ import seaborn as sns
 import os
 
 class PIMP(FeatureSelection):
-    def __init__(self, feature_score_name,nb_runs=80):
+    def __init__(self, feature_score_name, corr_score_name = 'corr_score.csv', nb_runs=80):
         super(PIMP, self).__init__(feature_score_name)
         self.nb_runs = nb_runs
+        self.corr_score_name=corr_score_name
 
     def load_data(self):
         dataset = Dataset('train_agg_id1.csv', 'test_agg_id1.csv')
@@ -71,10 +72,16 @@ class PIMP(FeatureSelection):
         self.actual_imp_df = self.get_feature_importances(self.train_X, False, self.target,
                                                      train_features=self.features, categorical_feats= self.cate_features)
         self.null_imp_df = self.get_null_importance()
-        score_df = self.get_feature_score()
+        score_df,corr_scores_df = self.get_feature_score()
 
-        print('successfully calculate feature score, saving feature score df ...')
+        print('successfully calculate feature score, saving feature score df and corr score df ...')
         score_df.to_csv(os.path.join('./feature_score',self.feature_score_name), index = False)
+        corr_scores_df.to_csv(os.path.join('./feature_score',self.corr_score_name), index = False)
+        print('saving successfully ...')
+
+
+        print('saving actual and null importance ...')
+        self.save_feature_distribution()
         print('saving successfully ...')
 
 
@@ -101,6 +108,7 @@ class PIMP(FeatureSelection):
         return null_imp_df
 
     def get_feature_score(self):
+        print("calculate feature_score ...")
         feature_scores = []
         for _f in self.actual_imp_df['feature'].unique():
             f_null_imps_gain = self.null_imp_df.loc[self.null_imp_df['feature'] == _f, 'importance_gain'].values
@@ -115,21 +123,20 @@ class PIMP(FeatureSelection):
 
         scores_df = pd.DataFrame(feature_scores, columns=['feature', 'split_score', 'gain_score'])
 
-        plt.figure(figsize=(16, 16))
-        gs = gridspec.GridSpec(1, 2)
-        # Plot Split importances
-        ax = plt.subplot(gs[0, 0])
-        sns.barplot(x='split_score', y='feature', data=scores_df.sort_values('split_score', ascending=False).iloc[0:70],
-                    ax=ax)
-        ax.set_title('Feature scores wrt split importances', fontweight='bold', fontsize=14)
-        # Plot Gain importances
-        ax = plt.subplot(gs[0, 1])
-        sns.barplot(x='gain_score', y='feature', data=scores_df.sort_values('gain_score', ascending=False).iloc[0:70],
-                    ax=ax)
-        ax.set_title('Feature scores wrt gain importances', fontweight='bold', fontsize=14)
-        plt.tight_layout()
+        print("calculate correlation score")
+        correlation_scores = []
+        for _f in self.actual_imp_df['feature'].unique():
+            f_null_imps = self.null_imp_df.loc[self.null_imp_df['feature'] == _f, 'importance_gain'].values
+            f_act_imps = self.actual_imp_df.loc[self.actual_imp_df['feature'] == _f, 'importance_gain'].values
+            gain_score = 100 * (f_null_imps < np.percentile(f_act_imps, 25)).sum() / f_null_imps.size
+            f_null_imps = self.null_imp_df.loc[self.null_imp_df['feature'] == _f, 'importance_split'].values
+            f_act_imps = self.actual_imp_df.loc[self.actual_imp_df['feature'] == _f, 'importance_split'].values
+            split_score = 100 * (f_null_imps < np.percentile(f_act_imps, 25)).sum() / f_null_imps.size
+            correlation_scores.append((_f, split_score, gain_score))
 
-        return scores_df
+        corr_scores_df = pd.DataFrame(correlation_scores, columns=['feature', 'split_score', 'gain_score'])
+
+        return scores_df, corr_scores_df
 
     def show_score_df(self):
         if os.path.isfile(os.path.join('./feature_score',self.feature_score_name)):
@@ -138,18 +145,42 @@ class PIMP(FeatureSelection):
             score_split = score.sort_values(by = ['split_score'], ascending=False).reset_index(drop=True)
             score_gain = score.sort_values(by = ['gain_score'], ascending=False).reset_index(drop=True)
             score_both = score.sort_values(by = ['split_score','gain_score'], ascending=False).reset_index(drop=True)
-            return score_split, score_gain, score_both
 
 
+            corr_score = pd.read_csv(os.path.join('./feature_score',self.corr_score_name))
+
+            return score_split, score_gain, score_both, corr_score
         else:
             print("no score file exist ...")
+
+    def save_feature_distribution(self):
+        self.actual_imp_df.to_csv(os.path.join('./feature_score/null_and_actual_importance','actual_imp_df.csv'))
+        self.null_imp_df.to_csv(os.path.join('./feature_score/null_and_actual_importance', 'null_imp_df.csv'))
+
+    def plot_feature_score(self, df):
+        fig = plt.figure(figsize=(16,16))
+        gs = gridspec.GridSpec(1,2)
+        ax = plt.subplot(gs[0,0])
+        sns.barplot(x='split_score', y = 'features', data = df.sort_values(by=['split_score'], ascending=False).iloc[0:70], ax= ax)
+        ax.set_title('Feature scores wrt split importances', fontweight='bold', fontsize=14)
+        ax = plt.subplot([0,1])
+        sns.barplot(x='gain_score', y='features', data=df.sort_values(by=['gain_score'],ascending=False).iloc[0:70],ax=ax)
+        ax.set_title('Feature scores wrt gain importances', fontweight='bold', fontsize=14)
+        plt.tight_layout()
+        plt.suptitle("Features' split and gain scores", fontweight='bold', fontsize=16)
+        fig.subplots_adjust(top=0.93)
+
+
+
 if __name__ == "__main__":
     pimp = PIMP("pimp_score.csv")
     pimp.permutation_importance()
-    score_split, score_gain, score_both = pimp.show_score_df()
+    score_split, score_gain, score_both, corr_score = pimp.show_score_df()
     print("score_split")
     print(score_split.head())
     print("score_gain")
     print(score_gain.head())
     print("score_both")
     print(score_both.head())
+    print("corr_score")
+    print(corr_score.head())
