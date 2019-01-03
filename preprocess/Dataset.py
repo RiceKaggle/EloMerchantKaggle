@@ -25,7 +25,7 @@ class Dataset(object):
         # simply set
         print('set train outlier ...')
         df_train['outlier'] = 0
-        df_train.loc[df_train['target'] <= -30, :] = 1
+        df_train.loc[df_train['target'] < -30, 'outlier'] = 1
         print('set outlier successfully')
 
     def load_test(self):

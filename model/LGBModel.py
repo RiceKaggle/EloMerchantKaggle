@@ -20,8 +20,8 @@ class LGBModel(MLModel):
                  shuffle=True, data_dir="../data",
                  submission_dir='../submission',
                  best_param_dir = '../best_param',
-                 train_file_name='df_train_agg1.csv',
-                 test_file_name='df_test_agg1.csv'):
+                 train_file_name='train_agg_id1.csv',
+                 test_file_name='test_agg_id1.csv'):
         '''
         :param non_numeric_param: non-numeric parameter, do not optimize these parameter
         :param objective: the objective of the model
@@ -83,12 +83,38 @@ class LGBModel(MLModel):
 
         return prediction
 
-    def predict_with_param(self, param, file_name = 'prediction_lgb_id_default.csv'):
-        self.read_data()
-        self.select_important_feature()
+    def set_train_test(self, train_X, train_Y,test,train_features,cate_features, stratified_col = 'target'):
+        '''
+
+        :param train_X:
+        :param train_Y:
+        :param test:
+        :param train_features:
+        :param cate_features:
+        :param stratified_col: when cv split method is StratifiedKFold, this argument determine which col's values is used for Stratified
+        :return:
+        '''
+        self.train_X = train_X
+        self.train_Y = train_Y
+        self.test = test
+        self.train_features = train_features
+        self.cate_features = cate_features
+        if self.split_method == 'StratifiedKFold':
+            self.stratified_values = self.train_X[stratified_col].values
+        self.set_train_test_bool = True
+
+
+    def predict_with_param(self, param, read_data = True, select_feature = False, file_name = 'prediction_lgb_id_default.csv'):
+        if read_data:
+            self.read_data()
+        if select_feature :
+            self.select_important_feature()
+
 
         print(self.train_features)
-
+        if not self.set_train_test_bool:
+            print('train and test dataset set wrong ...')
+            return
 
         cv_error, prediction = self._train(params=param, predict= True)
         print('cv_error with provided parameters is {} ...'.format(cv_error))
@@ -113,8 +139,10 @@ class LGBModel(MLModel):
 
         return prediction
 
+
     def _train(self, params=None, predict=False):
         oof_lgb = np.zeros(len(self.train_X))
+        print('cate_feature',self.cate_features)
         prediction = np.zeros(len(self.test))
         feature_importance_df = pd.DataFrame()
         if self.split_method == 'KFold':
@@ -122,8 +150,8 @@ class LGBModel(MLModel):
             iterator = enumerate(kfold.split(self.train_X))
 
         elif self.split_method == 'StratifiedKFold':
-            kfold = StratifiedKFold(n_splits=self.n_splits, random_state=self.random_state)
-            iterator = enumerate(kfold.split(self.train_X, self.train_Y.values))
+            kfold = StratifiedKFold(n_splits=self.n_splits, shuffle=True, random_state=self.random_state)
+            iterator = enumerate(kfold.split(self.train_X, self.stratified_values))
 
         for fold_, (train_index, val_index) in iterator:
 
@@ -149,6 +177,7 @@ class LGBModel(MLModel):
         print('CV score: {:<8.5f}'.format(mean_squared_error(oof_lgb, self.train_Y) ** 0.5))
         return mean_squared_error(oof_lgb, self.train_Y) ** 0.5, prediction
 
+
     def sample_loss(self, params):
         # change the numeric parameter list to parameter dict
         param_dict = {}
@@ -166,11 +195,16 @@ class LGBModel(MLModel):
         cv_error,_ = self._train(param_dict)
         return cv_error, param_dict
 
+
     def read_data(self):
+        self.set_train_test_bool = True
         data_set = Dataset(self.train_file_name, self.test_file_name, base_dir=self.data_dir)
 
         self.train_X, self.train_Y, self.test, self.train_features, self.cate_features = data_set.preprocess(
             reload=True)
+        # default stratified values
+        self.stratified_values = self.train_Y.values
+
 
 
     def select_important_feature(self):
@@ -178,12 +212,11 @@ class LGBModel(MLModel):
         score_split, score_gain, score_both, corr_score = pimp.show_score_df(feature_dir='../preprocess/feature_score')
         print(score_split.loc[score_split['feature']=='feature_1','split_score'] > 0)
 
-        features = [_f for _f in score_split['feature'].values if (score_split.loc[score_split['feature']==_f,'gain_score'] > 0).bool()]
+        features = [_f for _f in score_split['feature'].values if (score_split.loc[score_split['feature']==_f,'split_score'] > -10).bool()]
         # features = [_f for _f in corr_score['feature'].values if
         #             (corr_score.loc[corr_score['feature'] == _f, 'split_score'] > 0).bool()]
         self.train_features = features
         self.cate_features = [_c for _c in self.cate_features if _c in features]
-
 
 
     # overload the train method
@@ -231,7 +264,7 @@ class LGBModel(MLModel):
 
 
 if __name__ == '__main__':
-    model = LGBModel(bayesian_optimisation=True,debug=False,verbose_eval=False)
+    model = LGBModel(train_file_name='train_clean.csv', test_file_name='test_clean.csv',bayesian_optimisation=True,debug=False,verbose_eval=False)
     # model.train()
     # model.predict()
     param = {'num_leaves': 31,
@@ -249,4 +282,5 @@ if __name__ == '__main__':
              "lambda_l1": 0.1,
              "nthread": 4,
              "verbosity": -1}
-    model.predict_with_param(param, file_name='lgb_id7.csv')
+
+    model.predict_with_param(param, file_name='lgb_id14.csv')

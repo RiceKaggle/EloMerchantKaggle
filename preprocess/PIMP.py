@@ -171,8 +171,6 @@ class PIMP(FeatureSelection):
         fig.subplots_adjust(top=0.93)
 
 
-
-
 if __name__ == "__main__":
     pimp = PIMP("pimp_score.csv",corr_score_name='corr_score.csv')
     #pimp.permutation_importance()
