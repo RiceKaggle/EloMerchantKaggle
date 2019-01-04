@@ -240,8 +240,16 @@ class LGBModel(MLModel):
                 fold_importance_feature['fold'] = fold_ + 1
                 feature_importance_df = pd.concat([feature_importance_df, fold_importance_feature], axis=0)
                 prediction += model.predict(self.test.loc[:,self.train_features], num_iteration=model.best_iteration) / kfold.n_splits
-        print('CV score: {:<8.5f}'.format(mean_squared_error(oof_lgb, self.train_Y) ** 0.5))
-        return mean_squared_error(oof_lgb, self.train_Y) ** 0.5, prediction
+
+        if self.metric == 'rmse':
+            cv_error = mean_squared_error(oof_lgb, self.train_Y) ** 0.5
+            print("CV score: {:<8.5f}".format(cv_error))
+
+        elif self.metric == 'binary_logloss':
+            cv_error = log_loss(self.train_Y, oof_lgb)
+            print("CV score: {:<8.5f}".format(cv_error))
+
+        return cv_error, prediction
 
 
     def sample_loss(self, params):
