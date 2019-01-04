@@ -21,7 +21,8 @@ class CatBoostModel(MLModel):
                  best_param_dir = '../best_param',
                  train_file_name='train_agg_id1.csv',
                  test_file_name='test_agg_id1.csv',
-                 random_state=1052):
+                 random_state=1052, shuffle = True,
+                 contain_cate = False):
         super(CatBoostModel, self).__init__()
         self.bayesian_optimisation = bayesian_optimisation
         self.debug = debug
@@ -36,6 +37,8 @@ class CatBoostModel(MLModel):
         self.non_numeric_param = non_numeric_param
         self.random_state = random_state
         self.non_numeric_param = {"objective":"regression", "eval_metric":"RMSE"}
+        self.shuffle = shuffle
+        self.contain_cate = contain_cate
 
 
     def train(self, params_list=None):
@@ -82,24 +85,29 @@ class CatBoostModel(MLModel):
         prediction = np.zeros(len(self.test))
         feature_importance_df = pd.DataFrame()
         if self.split_method == 'KFold':
-            kfold = KFold(n_splits=self.n_splits, random_state=self.random_state)
+            kfold = KFold(n_splits=self.n_splits, shuffle=self.shuffle, random_state=self.random_state)
             iterator = enumerate(kfold.split(self.train_X))
 
         elif self.split_method == 'StratifiedKFold':
-            kfold = StratifiedKFold(n_splits=self.n_splits, random_state=self.random_state)
+            kfold = StratifiedKFold(n_splits=self.n_splits,shuffle=self.shuffle, random_state=self.random_state)
             iterator = enumerate(kfold.split(self.train_X, self.train_Y.values))
 
         for fold_, (train_index, val_index) in iterator:
             print('cat fold_{}'.format(fold_ + 1))
 
             model_cat = CatBoostRegressor(**params)
+            if self.contain_cate:
 
-            model_cat.fit(self.train_X.loc[train_index, self.train_features], self.train_Y[train_index],
-                          eval_set=(self.train_X.loc[val_index, self.train_features], self.train_Y[val_index]))
-            oof_cat[val_index] = model_cat.predict(self.train_X.loc[val_index, self.train_features])
+                model_cat.fit(self.train_X.iloc[train_index][self.train_features], self.train_Y[train_index],
+                          eval_set=(self.train_X.iloc[val_index][self.train_features], self.train_Y[val_index]),cat_features=self.cate_features)
+            else:
+                model_cat.fit(self.train_X.iloc[train_index][self.train_features], self.train_Y[train_index],
+                              eval_set=(self.train_X.iloc[val_index][self.train_features], self.train_Y[val_index]))
+
+            oof_cat[val_index] = model_cat.predict(self.train_X.iloc[val_index][self.train_features])
             # only when predict is true calculate the featrue importance and predict on test set
             if predict:
-                prediction += model_cat.predict(self.test.loc[:,self.train_features]) / kfold.n_splits
+                prediction += model_cat.predict(self.test[self.train_features]) / kfold.n_splits
         print('CV score: {:<8.5f}'.format(mean_squared_error(oof_cat, self.train_Y) ** 0.5))
 
 

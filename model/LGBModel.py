@@ -120,7 +120,7 @@ class LGBModel(MLModel):
             print('train and test dataset set wrong ...')
             return
 
-        #cv_error, prediction = self._train(params=param, predict= True)
+        #cv_error, prediction = self.debug_train(params=param, predict= True)
         cv_error, prediction = self._train(params=param, predict=True)
         print('cv_error with provided parameters is {} ...'.format(cv_error))
         result = pd.DataFrame({'card_id': self.test['card_id']})
@@ -145,14 +145,15 @@ class LGBModel(MLModel):
         return prediction
 
     def debug_train(self, params = None, predict = False):
-
+        print('run debug train')
         oof = np.zeros(len(self.train_X))
+
         predictions = np.zeros(len(self.test))
         feature_importance_df = pd.DataFrame()
 
 
         if self.split_method == 'KFold':
-            kfold = KFold(n_splits=self.n_splits, random_state=self.random_state)
+            kfold = KFold(n_splits=self.n_splits, shuffle=True, random_state=self.random_state)
             iterator = enumerate(kfold.split(self.train_X))
 
         elif self.split_method == 'StratifiedKFold':
@@ -160,26 +161,29 @@ class LGBModel(MLModel):
             iterator = enumerate(kfold.split(self.train_X, self.stratified_values))
 
         for fold_, (trn_idx, val_idx) in iterator:
-            # print("fold {}".format(fold_))
+            print("fold {}".format(fold_))
             # trn_data = lgb.Dataset(self.train_X.iloc[trn_idx][self.train_features],
             #                        label=self.train_Y.iloc[trn_idx])  # , categorical_feature=categorical_feats)
             # val_data = lgb.Dataset(self.train_X.iloc[val_idx][self.train_features],
             #                        label=self.train_Y.iloc[val_idx])  # , categorical_feature=categorical_feats)
+            print('set cate feature? ',self.cate_features)
 
-
-            train_x, val_x = self.train_X.iloc[trn_idx][self.train_features],self.train_X.iloc[val_idx][self.train_features]
-            train_y, val_y = self.train_Y.iloc[trn_idx], self.train_Y.iloc[val_idx]
-
-            print("fold {}".format(fold_))
-            trn_data = lgb.Dataset(train_x,
-                                   label=train_y)  # , categorical_feature=categorical_feats)
-            val_data = lgb.Dataset(val_x,
-                                   label=val_y)  # , categorical_feature=categorical_feats)
+            if self.contain_cate:
+                trn_data = lgb.Dataset(self.train_X.iloc[trn_idx][self.train_features],
+                                   label=self.train_Y.iloc[trn_idx],categorical_feature=self.cate_features)
+                val_data = lgb.Dataset(self.train_X.iloc[val_idx][self.train_features],
+                                   label=self.train_Y.iloc[val_idx],categorical_feature=self.cate_features)
+            else:
+                trn_data = lgb.Dataset(self.train_X.iloc[trn_idx][self.train_features],
+                                       label=self.train_Y.iloc[trn_idx])
+                val_data = lgb.Dataset(self.train_X.iloc[val_idx][self.train_features],
+                                       label=self.train_Y.iloc[val_idx])
 
             num_round = 10000
             clf = lgb.train(params, trn_data, num_round, valid_sets=[trn_data, val_data], verbose_eval=100,
                             early_stopping_rounds=200)
-            oof[val_idx] = clf.predict(self.train_X.iloc[val_idx][self.train_features], num_iteration=clf.best_iteration)
+            oof[val_idx] = clf.predict(self.train_X.iloc[val_idx][self.train_features],
+                                       num_iteration=clf.best_iteration)
 
             fold_importance_df = pd.DataFrame()
             fold_importance_df["Feature"] = self.train_features
@@ -188,6 +192,7 @@ class LGBModel(MLModel):
             feature_importance_df = pd.concat([feature_importance_df, fold_importance_df], axis=0)
 
             predictions += clf.predict(self.test[self.train_features], num_iteration=clf.best_iteration) / kfold.n_splits
+
         if self.metric == 'rmse':
             cv_error = mean_squared_error(oof, self.train_Y) ** 0.5
             print("CV score: {:<8.5f}".format(cv_error))
@@ -197,6 +202,7 @@ class LGBModel(MLModel):
             print("CV score: {:<8.5f}".format(cv_error))
 
         return cv_error, predictions
+
 
     def _train(self, params=None, predict=False):
         oof_lgb = np.zeros(len(self.train_X))
@@ -214,8 +220,8 @@ class LGBModel(MLModel):
             iterator = enumerate(kfold.split(self.train_X, self.stratified_values))
 
         for fold_, (train_index, val_index) in iterator:
-            if self.cate_features:
 
+            if self.contain_cate:
                 trn_data = lgb.Dataset(self.train_X.iloc[train_index][self.train_features],
                                    label=self.train_Y.iloc[train_index],categorical_feature=self.cate_features)
                 val_data = lgb.Dataset(self.train_X.iloc[val_index][self.train_features],
@@ -239,7 +245,7 @@ class LGBModel(MLModel):
                 fold_importance_feature['importance'] = model.feature_importance()
                 fold_importance_feature['fold'] = fold_ + 1
                 feature_importance_df = pd.concat([feature_importance_df, fold_importance_feature], axis=0)
-                prediction += model.predict(self.test.loc[:,self.train_features], num_iteration=model.best_iteration) / kfold.n_splits
+                prediction += model.predict(self.test[self.train_features], num_iteration=model.best_iteration) / kfold.n_splits
 
         if self.metric == 'rmse':
             cv_error = mean_squared_error(oof_lgb, self.train_Y) ** 0.5

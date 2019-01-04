@@ -8,6 +8,8 @@ from model.LGBModel import LGBModel
 from preprocess.Dataset import Dataset
 import lightgbm as lgb
 
+START_ID = 11
+
 class EloPipeline(object):
     def __init__(self, data_dir = '../data',
                  submission_dir = '../submission',
@@ -99,8 +101,7 @@ class EloPipeline(object):
 
 
     # this method use lgb to do binary classification
-    def binary_classification(self, methon = 'lgb', metrics = 'auc',
-                              params = None, n_splits =5, split_method = 'KFold'):
+    def binary_classification(self,  metrics = 'binary_logloss', n_splits =5, split_method = 'KFold'):
         lgb_model = LGBModel(random_state=15,objective = 'binary',metric = metrics ,debug=False,verbose_eval=False)
 
         if not hasattr(self, 'train_X') or not hasattr(self, 'train_Y'):
@@ -128,7 +129,7 @@ class EloPipeline(object):
                  "verbosity": -1,
                  "random_state": 2333}
 
-        predictions = lgb_model.predict_with_param(param, read_data=False, file_name='lgb_outlier_classifier_id16.csv')
+        predictions = lgb_model.predict_with_param(param, read_data=False, file_name='lgb_outlier_classifier_id'+(str(START_ID+1))+'.csv')
         outlier_classify = pd.DataFrame({'card_id':self.test['card_id']})
         outlier_classify['target'] = predictions
         outlier_classify.sort_values(by=['target'], ascending=False).reset_index(drop=True, inplace = True)
@@ -183,7 +184,7 @@ class EloPipeline(object):
                  "verbosity": -1,
                  "random_state": 2333}
 
-        prediction = lgb_model.predict_with_param(param, read_data=False, file_name='lgb_without_outlier_id15.csv')
+        prediction = lgb_model.predict_with_param(param, read_data=False, file_name='lgb_without_outlier_id'+(str(START_ID))+'.csv')
         model_without_outliers = pd.DataFrame({"card_id": self.test["card_id"].values})
         model_without_outliers["target"] = prediction
         return model_without_outliers
@@ -191,11 +192,14 @@ class EloPipeline(object):
 
 if __name__ == "__main__":
 
+
+
     # 2.predict without outlier
-    pipeline = EloPipeline(train_file='train_agg_id1.csv',test_file='test_agg_id1.csv')
+    pipeline = EloPipeline(train_file='train_clean.csv',test_file='test_clean.csv')
     model_without_outliers = pipeline.train_without_outlier()
+    #model_without_outliers = pd.read_csv('../submission/lgb_without_outlier_id'+(str(START_ID))+'.csv')
     outlier_likehood = pipeline.binary_classification()
     best_model = pd.read_csv('../submission/3.695.csv')
-    pipeline = pipeline.separate_prediction(outlier_likehood, model_without_outliers,best_model,'without_outlier_id17.csv')
+    pipeline = pipeline.separate_prediction(outlier_likehood, model_without_outliers,best_model,'without_outlier_id'+(str(START_ID+2))+'.csv')
 
 
