@@ -6,6 +6,7 @@ from sklearn.model_selection import KFold, StratifiedKFold
 from sklearn.linear_model import BayesianRidge
 from model.LGBModel import LGBModel
 from preprocess.Dataset import Dataset
+import lightgbm as lgb
 
 class EloPipeline(object):
     def __init__(self, data_dir = '../data',
@@ -100,13 +101,13 @@ class EloPipeline(object):
     # this method use lgb to do binary classification
     def binary_classification(self, methon = 'lgb', metrics = 'auc',
                               params = None, n_splits =5, split_method = 'KFold'):
-        lgb_model = LGBModel(objective = 'binary',metric = metrics ,debug=False,verbose_eval=False)
+        lgb_model = LGBModel(random_state=15,objective = 'binary',metric = metrics ,debug=False,verbose_eval=False)
 
         if not hasattr(self, 'train_X') or not hasattr(self, 'train_Y'):
 
             self.set_train_outlier()
 
-        target = self.train_X['outlier']
+        target = self.train_X['outliers']
         df_train = self.train_X.copy()
         del df_train['target']
         print(len(target))
@@ -127,7 +128,7 @@ class EloPipeline(object):
                  "verbosity": -1,
                  "random_state": 2333}
 
-        predictions = lgb_model.predict_with_param(param, read_data=False, file_name='lgb_outlier_classifier_id12.csv')
+        predictions = lgb_model.predict_with_param(param, read_data=False, file_name='lgb_outlier_classifier_id16.csv')
         outlier_classify = pd.DataFrame({'card_id':self.test['card_id']})
         outlier_classify['target'] = predictions
         outlier_classify.sort_values(by=['target'], ascending=False).reset_index(drop=True, inplace = True)
@@ -135,13 +136,13 @@ class EloPipeline(object):
 
 
     def separate_prediction(self, outlier_classfier, model_without_outlier, best_model, submission_name):
-        outlier_id = pd.DataFrame(outlier_classfier.head(1310)['card_id'])
+        outlier_id = pd.DataFrame(outlier_classfier.head(25000)['card_id'])
         most_likely_liers = best_model.merge(outlier_id, how='right')
         for card_id in most_likely_liers['card_id']:
             model_without_outlier.loc[model_without_outlier['card_id'] == \
                                       card_id,'target'] = most_likely_liers.loc[most_likely_liers['card_id']==card_id,'target'].values
 
-        model_without_outlier.to_csv(os.path.join(self.submission_dir, submission_name))
+        model_without_outlier.to_csv(os.path.join(self.submission_dir, submission_name), index=False)
         return model_without_outlier
 
 
@@ -150,54 +151,51 @@ class EloPipeline(object):
 
         self.train_X, self.train_Y, self.test, self.features, self.cate_features = dataset.preprocess(reload=True)
         self.train_X['target'] = self.train_Y
-        dataset.set_outlier_col(self.train_X)
 
-        train_df = self.train_X[self.train_X['outlier'] == 0]
+        if 'outliers' not in self.train_X.columns:
+            dataset.set_outlier_col(self.train_X)
+
+        train_df = self.train_X[self.train_X['outliers'] == 0]
         target = train_df['target']
+        del train_df['target']
         return train_df, target
 
 
     def train_without_outlier(self):
-        lgb_model = LGBModel(random_state=2333,  debug=False, verbose_eval=False, split_method='StratifiedKFold')
+        lgb_model = LGBModel(contain_cate=False, random_state=2333,  debug=False, verbose_eval=False, split_method='StratifiedKFold')
         # set_outlier will set the training and testing data
         train_df, target = self.set_train_outlier()
+
         # set training and testing data for lgb model
-        lgb_model.set_train_test(train_df, target ,self.test ,self.features,self.cate_features,'outlier')
+        lgb_model.set_train_test(train_df, target ,self.test ,self.features,self.cate_features,'outliers')
 
-        param = {'num_leaves': 31,
-                 'min_data_in_leaf': 32,
-                 'objective': 'regression',
-                 'max_depth': -1,
-                 'learning_rate': 0.005,
-                 "min_child_samples": 20,
+        param = {'objective': 'regression',
+                 'num_leaves': 31,
+                 'min_data_in_leaf': 25,
+                 'max_depth': 7,
+                 'learning_rate': 0.01,
+                 'lambda_l1': 0.13,
                  "boosting": "gbdt",
-                 "feature_fraction": 0.9,
-                 "bagging_freq": 1,
+                 "feature_fraction": 0.85,
+                 'bagging_freq': 8,
                  "bagging_fraction": 0.9,
-                 "bagging_seed": 11,
                  "metric": 'rmse',
-                 "lambda_l1": 0.1,
-                 "nthread": 4,
-                 "verbosity": -1}
+                 "verbosity": -1,
+                 "random_state": 2333}
 
-        prediction = lgb_model.predict_with_param(param, read_data=False, file_name='lgb_without_outlier_id11.csv')
+        prediction = lgb_model.predict_with_param(param, read_data=False, file_name='lgb_without_outlier_id15.csv')
         model_without_outliers = pd.DataFrame({"card_id": self.test["card_id"].values})
         model_without_outliers["target"] = prediction
         return model_without_outliers
 
 
 if __name__ == "__main__":
-    # 1. stack models together
-    # pipeline = EloPipeline()
-    # predict_list = ['lgb_id1.csv','cat_id4.csv','lgb_id2.csv']
-    # pipeline.stack_model(predict_list)
-    pass
 
     # 2.predict without outlier
-    pipeline = EloPipeline(train_file='train_clean.csv',test_file='test_clean.csv')
-    model_without_outliers = pd.read_csv('../submission/lgb_id14.csv')
+    pipeline = EloPipeline(train_file='train_agg_id1.csv',test_file='test_agg_id1.csv')
+    model_without_outliers = pipeline.train_without_outlier()
     outlier_likehood = pipeline.binary_classification()
     best_model = pd.read_csv('../submission/3.695.csv')
-    pipeline = pipeline.separate_prediction(outlier_likehood, model_without_outliers,best_model,'without_outlier_id13.csv')
+    pipeline = pipeline.separate_prediction(outlier_likehood, model_without_outliers,best_model,'without_outlier_id17.csv')
 
 

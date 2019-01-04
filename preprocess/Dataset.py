@@ -24,8 +24,8 @@ class Dataset(object):
     def set_outlier_col(self, df_train):
         # simply set
         print('set train outlier ...')
-        df_train['outlier'] = 0
-        df_train.loc[df_train['target'] < -30, 'outlier'] = 1
+        df_train['outliers'] = 0
+        df_train.loc[df_train['target'] < -30, 'outliers'] = 1
         print('set outlier successfully')
 
     def load_test(self):
@@ -240,8 +240,11 @@ class Dataset(object):
         del df_train['target']
         train_X = df_train
 
-        features = [col for col in df_train.columns.values if col not in ['card_id','first_active_month','Unnamed: 0','outlier','target']]
-        cate_features = [col for col in df_train.columns.values if 'feature' in col]
+        features = [c for c in df_train.columns if c not in ['card_id', 'first_active_month', 'outliers','Unnamed: 0']]
+        cate_features = [c for c in features if 'feature_' in c]
+
+        #features = [col for col in df_train.columns.values if col not in ['card_id','first_active_month','Unnamed: 0','outliers']]
+        #cate_features = [col for col in df_train.columns.values if 'feature' in col]
 
         return train_X, train_Y, test, features, cate_features
 
