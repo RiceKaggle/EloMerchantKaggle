@@ -188,6 +188,7 @@ class EloPipeline(object):
 
         return train_df, target
 
+    
     def train_without_outlier_cat(self):
         cat_model = CatBoostModel()
         param = {
