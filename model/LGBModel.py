@@ -121,7 +121,9 @@ class LGBModel(MLModel):
             return
 
         #cv_error, prediction = self.debug_train(params=param, predict= True)
-        cv_error, prediction = self._train(params=param, predict=True)
+        cv_error, oof_lgb,prediction = self._train(params=param, predict=True)
+        oof_lgb = pd.DataFrame({'target': oof_lgb})
+        oof_lgb.to_csv(os.path.join(self.submission_dir + '/oof', 'oof_' + file_name), index=False)
         print('cv_error with provided parameters is {} ...'.format(cv_error))
         result = pd.DataFrame({'card_id': self.test['card_id']})
         result['target'] = prediction
@@ -132,7 +134,7 @@ class LGBModel(MLModel):
 
     def predict(self, file_name='submission_lgb.csv', best_param_name = 'lgb_param.json'):
         # use the best parameter to predict and save as file_name
-        cv_error, prediction = self._train(params=self.so_far_best_params, predict=True)
+        cv_error, oof_lgb, prediction = self._train(params=self.so_far_best_params, predict=True)
 
         result = pd.DataFrame({'card_id': self.test['card_id']})
         result['target'] = prediction
@@ -255,7 +257,7 @@ class LGBModel(MLModel):
             cv_error = log_loss(self.train_Y, oof_lgb)
             print("CV score: {:<8.5f}".format(cv_error))
 
-        return cv_error, prediction
+        return cv_error, oof_lgb, prediction
 
 
     def sample_loss(self, params):
@@ -272,7 +274,7 @@ class LGBModel(MLModel):
             param_dict[key] = self.non_numeric_param[key]
 
         print(param_dict)
-        cv_error,_ = self._train(param_dict)
+        cv_error,_,_ = self._train(param_dict)
         return cv_error, param_dict
 
 

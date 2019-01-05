@@ -6,6 +6,7 @@ import pandas as pd
 from sklearn.model_selection import KFold,StratifiedKFold
 from sklearn.metrics import mean_squared_error
 from catboost import CatBoostRegressor
+import catboost as cb
 import os
 import json
 
@@ -19,9 +20,11 @@ class CatBoostModel(MLModel):
                  data_dir="../data",
                  submission_dir='../submission',
                  best_param_dir = '../best_param',
+                 num_round=10000, metric = 'rmse',
+                 objective='regression',
                  train_file_name='train_agg_id1.csv',
                  test_file_name='test_agg_id1.csv',
-                 random_state=1052, shuffle = True,
+                 random_state=15, shuffle = True,
                  contain_cate = False):
         super(CatBoostModel, self).__init__()
         self.bayesian_optimisation = bayesian_optimisation
@@ -36,9 +39,52 @@ class CatBoostModel(MLModel):
         self.test_file_name = test_file_name
         self.non_numeric_param = non_numeric_param
         self.random_state = random_state
-        self.non_numeric_param = {"objective":"regression", "eval_metric":"RMSE"}
+        self.metric = metric
+        self.objective = objective
+        self.num_round = num_round
+        self.non_numeric_param = {"objective":self.objective, "eval_metric":self.metric}
         self.shuffle = shuffle
         self.contain_cate = contain_cate
+
+    def predict_with_best_param(self, file_name = 'submission_cat.csv', best_param_name = 'cat_param.json'):
+        self.read_data()
+        param_path = os.path.join(self.best_param_dir,best_param_name)
+        print('lgb::: load best param so far form {} ...'.format(param_path))
+        with open(param_path) as readfile:
+            self.so_far_best_params = json.loads(readfile)
+        print('lgb::: load successfully, begin to train and prediction ...')
+        cv_error,oof_cat , prediction = self._train(params=self.so_far_best_params, predict=True)
+
+        print('lgb::: best cv_error is {} ...'.format(cv_error))
+        result = pd.DataFrame({'card_id': self.test['card_id']})
+        result['target'] = prediction
+        result.to_csv(os.path.join(self.submission_dir, file_name), index=False)
+        print('lgb::: save the prediction result in {} ...'.format(os.path.join(self.submission_dir, file_name)))
+
+        return prediction
+
+
+    def set_train_test(self, train_X, train_Y,test,train_features,cate_features, stratified_col = 'target'):
+        '''
+        :param train_X:
+        :param train_Y:
+        :param test:
+        :param train_features:
+        :param cate_features:
+        :param stratified_col: when cv split method is StratifiedKFold, this argument determine which col's values is used for Stratified
+        :return:
+        '''
+        self.train_X = train_X
+        self.train_Y = train_Y
+        self.test = test
+        self.train_features = train_features
+        self.cate_features = cate_features
+
+        print(self.train_X.dtypes)
+
+        if self.split_method == 'StratifiedKFold':
+            self.stratified_values = self.train_X[stratified_col].values
+        self.set_train_test_bool = True
 
 
     def train(self, params_list=None):
@@ -77,10 +123,9 @@ class CatBoostModel(MLModel):
         n_iters = self.bayesian_iteration
         # each bounds corresponding to ['learning_rate','depth','bagging_temperature','metric_period','od_wait']
         bounds = [[0.02, 0.06], [4, 9], [0.8, 1.0], [80, 100], [50, 60]]
-
         return {'n_iters': n_iters, 'bounds': np.array(bounds), 'sample_loss': self.sample_loss}
 
-    def _train(self, params, predict=False, save_oof = False):
+    def _train(self, params = None, predict=False):
         oof_cat = np.zeros(len(self.train_X))
         prediction = np.zeros(len(self.test))
         feature_importance_df = pd.DataFrame()
@@ -97,12 +142,14 @@ class CatBoostModel(MLModel):
 
             model_cat = CatBoostRegressor(**params)
             if self.contain_cate:
+                trn_data = cb.Pool(self.train_X.iloc[train_index][self.train_features], self.train_Y[train_index],cat_features=self.cate_features)
+                val_data = cb.Pool(self.train_X.iloc[val_index][self.train_features], self.train_Y[val_index],cat_features=self.cate_features)
 
-                model_cat.fit(self.train_X.iloc[train_index][self.train_features], self.train_Y[train_index],
-                          eval_set=(self.train_X.iloc[val_index][self.train_features], self.train_Y[val_index]),cat_features=self.cate_features)
             else:
-                model_cat.fit(self.train_X.iloc[train_index][self.train_features], self.train_Y[train_index],
-                              eval_set=(self.train_X.iloc[val_index][self.train_features], self.train_Y[val_index]))
+                trn_data = cb.Pool(self.train_X.iloc[train_index][self.train_features], self.train_Y[train_index])
+                val_data = cb.Pool(self.train_X.iloc[val_index][self.train_features], self.train_Y[val_index])
+
+            model_cat.fit(trn_data, verbose_eval=400, eval_set=val_data)
 
             oof_cat[val_index] = model_cat.predict(self.train_X.iloc[val_index][self.train_features])
             # only when predict is true calculate the featrue importance and predict on test set
@@ -110,13 +157,12 @@ class CatBoostModel(MLModel):
                 prediction += model_cat.predict(self.test[self.train_features]) / kfold.n_splits
         print('CV score: {:<8.5f}'.format(mean_squared_error(oof_cat, self.train_Y) ** 0.5))
 
-
-        return mean_squared_error(oof_cat, self.train_Y) ** 0.5, oof_cat, prediction
-
+        return mean_squared_error(oof_cat, self.train_Y) ** 0.5, oof_cat,prediction
 
 
-    def predict_with_param(self, param, file_name = 'prediction_cat_id_default.csv'):
-        self.read_data()
+    def predict_with_param(self ,param, file_name = 'prediction_cat_id_default.csv', read_data = True):
+        if read_data:
+            self.read_data()
 
         cv_error, oof_cat , prediction = self._train(params=param, predict=True)
 
@@ -134,25 +180,6 @@ class CatBoostModel(MLModel):
         result.to_csv(os.path.join(self.submission_dir, file_name), index=False)
         print('save the prediction result in {} ...'.format(os.path.join(self.submission_dir, file_name)))
         return prediction
-
-
-    def predict_with_best_param(self, file_name = 'submission_cat.csv', best_param_name = 'cat_param.json'):
-        self.read_data()
-        param_path = os.path.join(self.best_param_dir,best_param_name)
-        print('catboost::: load best param so far form {} ...'.format(param_path))
-        with open(param_path) as readfile:
-            self.so_far_best_params = json.loads(readfile)
-        print('catboost::: load successfully, begin to train and prediction ...')
-        cv_error, oof_cat, prediction = self._train(params=self.so_far_best_params, predict=True)
-
-        print('catboost::: best cv_error is {} ...'.format(cv_error))
-        result = pd.DataFrame({'card_id': self.test['card_id']})
-        result['target'] = prediction
-        result.to_csv(os.path.join(self.submission_dir, file_name), index=False)
-        print('catboost::: save the prediction result in {} ...'.format(os.path.join(self.submission_dir, file_name)))
-
-        return prediction
-
 
     def predict(self, file_name='submission_cat.csv', best_param_name = 'cat_param.json'):
         # use the best parameter to predict and save as file_name
@@ -173,6 +200,7 @@ class CatBoostModel(MLModel):
 
         self.train_X, self.train_Y, self.test, self.train_features, self.cate_features = data_set.preprocess(
             reload=True)
+        self.set_train_test_bool = True
 
     def sample_loss(self, params):
         # change the numeric parameter list to parameter dict
@@ -187,16 +215,19 @@ class CatBoostModel(MLModel):
         cv_error,_,_ = self._train(param_dict)
         return cv_error, param_dict
 
+
+
 if __name__ == '__main__':
     model = CatBoostModel()
     param = {
         "iterations" : 10000,
-        "learning_rate": 0.02,
+        "learning_rate": 0.005,
         "depth" : 6,
         "eval_metric" : 'RMSE',
         "bagging_temperature" : 0.9,
         "od_type" : 'Iter',
         "metric_period" : 100,
-        "od_wait" : 50
+        "od_wait" : 50,
+        "random_state":2333
     }
     model.predict_with_param(param=param, file_name="cat_id4.csv")

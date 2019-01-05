@@ -7,6 +7,7 @@ from sklearn.linear_model import BayesianRidge
 from model.LGBModel import LGBModel
 from preprocess.Dataset import Dataset
 import lightgbm as lgb
+from model.CatBoostModel import CatBoostModel
 
 START_ID = 11
 
@@ -14,24 +15,47 @@ class EloPipeline(object):
     def __init__(self, data_dir = '../data',
                  submission_dir = '../submission',
                  train_file = 'train_agg_id1.csv',
-                 test_file = 'test_agg_id1.csv'):
+                 test_file = 'test_agg_id1.csv',
+                 combine_mode = 'whole', shuffle = True,
+                 random_state = 15):
+        '''
+
+        :param data_dir:
+        :param submission_dir:
+        :param train_file:
+        :param test_file:
+        :param combine_mode: when combine_mode is "whole", use the whole dataset to train, when the combine_mode is "outliers",
+        only combine the result on outlier data, when the combine_mode is "without_outliers" the combine result on training data
+        without the outlier
+        '''
         self.submission_dir = submission_dir
         self.data_dir = data_dir
         self.train_file = train_file
         self.test_file = test_file
+        self.combine_mode = combine_mode
+        self.shuffle = shuffle
+        self.random_state = random_state
 
     def get_train_target(self):
         train_df = pd.read_csv(os.path.join(self.data_dir, self.train_file))
         test_df = pd.read_csv(os.path.join(self.data_dir, self.test_file))
-        target = train_df['target']
-        target.to_csv(os.path.join(self.data_dir, 'target.csv'))
+        if self.combine_mode == 'outliers':
+            train_df = train_df[train_df['outliers'] == 1]
+            target = train_df['target']
+            del train_df['target']
+        elif self.combine_mode == 'without_outliers':
+            train_df = train_df[train_df['outliers'] == 0]
+            target = train_df['target']
+            del train_df['target']
+
         return target, test_df, train_df
+
 
     def stack_model(self, prediction_list_name,
                     method = "BayesianRidge",
                     split_method = "kFold",
-                    n_splits = 5,
-                    random_state = 4520):
+                    n_splits = 5):
+
         target, test_df, train_df= self.get_train_target()
 
         if len(prediction_list_name) == 0:
@@ -59,17 +83,17 @@ class EloPipeline(object):
             test_stack = np.vstack(prediction_list).transpose()
 
             if split_method == 'kFold':
-                kfold = KFold(n_splits=n_splits, random_state=random_state)
+                kfold = KFold(n_splits=n_splits, random_state=self.random_state, shuffle=self.shuffle)
                 iterator = enumerate(kfold.split(train_stack))
 
             elif split_method == 'StratifiedKFold':
-                kfold = StratifiedKFold(n_splits=n_splits, random_state=random_state)
+                kfold = StratifiedKFold(n_splits=n_splits, random_state=self.random_state, shuffle=self.shuffle)
                 iterator = enumerate(kfold.split(train_stack,target.values))
 
             oof_stack = np.zeros(train_stack.shape[0])
             predictions_stack = np.zeros(test_stack.shape[0])
 
-            for fold_, (trn_idx, val_idx) in enumerate(kfold.split(train_stack, target)):
+            for fold_, (trn_idx, val_idx) in iterator:
                 print("fold n°{}".format(fold_))
                 trn_data, trn_y = train_stack[trn_idx], target.iloc[trn_idx].values
                 val_data, val_y = train_stack[val_idx], target.iloc[val_idx].values
@@ -86,9 +110,9 @@ class EloPipeline(object):
 
             print("cv score : ",np.sqrt(mean_squared_error(target.values, oof_stack)))
             print('save stacked oof file and prediction file ...')
-            oof_file_name = '_'.join(prediction_list_name).strip()
+            oof_file_name = '_'.join([name[:len(name)-4] for name in prediction_list_name]).strip()
             oof_file_name = 'oof_merge_'+oof_file_name
-            pred_file_name = '_'.join(prediction_list_name).strip()
+            pred_file_name = '_'.join([name[:len(name)-4] for name in prediction_list_name]).strip()
             pred_file_name = 'merge_'+pred_file_name
 
             stack_result = pd.DataFrame({'card_id':test_df['card_id']})
@@ -132,13 +156,14 @@ class EloPipeline(object):
         predictions = lgb_model.predict_with_param(param, read_data=False, file_name='lgb_outlier_classifier_id'+(str(START_ID+1))+'.csv')
         outlier_classify = pd.DataFrame({'card_id':self.test['card_id']})
         outlier_classify['target'] = predictions
-        outlier_classify.sort_values(by=['target'], ascending=False).reset_index(drop=True, inplace = True)
         return outlier_classify
 
 
     def separate_prediction(self, outlier_classfier, model_without_outlier, best_model, submission_name):
-        outlier_id = pd.DataFrame(outlier_classfier.head(25000)['card_id'])
+        outlier_id = pd.DataFrame(outlier_classfier.sort_values(by='target', ascending=False).head(25000)['card_id'])
+
         most_likely_liers = best_model.merge(outlier_id, how='right')
+        print(most_likely_liers.head(50))
         for card_id in most_likely_liers['card_id']:
             model_without_outlier.loc[model_without_outlier['card_id'] == \
                                       card_id,'target'] = most_likely_liers.loc[most_likely_liers['card_id']==card_id,'target'].values
@@ -161,9 +186,33 @@ class EloPipeline(object):
         del train_df['target']
         return train_df, target
 
+    def train_without_outlier_cat(self):
+        cat_model = CatBoostModel(contain_cate=True)
+        param = {
+            "iterations": 10000,
+            "learning_rate": 0.005,
+            "depth": 6,
+            "eval_metric": 'RMSE',
+            "bagging_temperature": 0.9,
+            "od_type": 'Iter',
+            "metric_period": 100,
+            "od_wait": 50,
+            "random_state": 2333,
+            "l2_leaf_reg":100
+        }
+        train_df, target = self.set_train_outlier()
+        cat_model.set_train_test(train_df, target, self.test, self.features, self.cate_features, 'outliers')
+        # if you use the set_train_test, you need to set read_data to false in case the read_data() method override the train and test data
+        prediction = cat_model.predict_with_param(param=param,read_data=False,file_name='cat_without_outlier_id'+(str(START_ID))+'.csv')
+        model_without_outliers = pd.DataFrame({"card_id": self.test["card_id"].values})
+        model_without_outliers["target"] = prediction
+        return model_without_outliers
 
-    def train_without_outlier(self):
-        lgb_model = LGBModel(contain_cate=False, random_state=2333,  debug=False, verbose_eval=False, split_method='StratifiedKFold')
+
+    def train_without_outlier_lgb(self):
+        lgb_model = LGBModel(contain_cate=False, random_state=2333,
+                    debug=False, verbose_eval=False, split_method='StratifiedKFold')
+
         # set_outlier will set the training and testing data
         train_df, target = self.set_train_outlier()
 
@@ -192,14 +241,23 @@ class EloPipeline(object):
 
 if __name__ == "__main__":
 
-
-
     # 2.predict without outlier
-    pipeline = EloPipeline(train_file='train_clean.csv',test_file='test_clean.csv')
-    model_without_outliers = pipeline.train_without_outlier()
-    #model_without_outliers = pd.read_csv('../submission/lgb_without_outlier_id'+(str(START_ID))+'.csv')
-    outlier_likehood = pipeline.binary_classification()
-    best_model = pd.read_csv('../submission/3.695.csv')
-    pipeline = pipeline.separate_prediction(outlier_likehood, model_without_outliers,best_model,'without_outlier_id'+(str(START_ID+2))+'.csv')
+    pipeline = EloPipeline(train_file='train_clean.csv',test_file='test_clean.csv',combine_mode='without_outliers')
+
+    # train a cat boost model without outlier
+    cat_model_without_outliers = pipeline.train_without_outlier_cat()
+
+    #model_without_outliers = pipeline.train_without_outlier_lgb()
+    lgb_model_without_outliers = pd.read_csv('../submission/lgb_without_outlier_id'+(str(START_ID))+'.csv')
+
+    predict_list = ['lgb_without_outlier_id'+(str(START_ID))+'.csv', 'cat_without_outlier_id'+(str(START_ID))+'.csv']
+    pipeline.stack_model(predict_list)
+
+
+    #outlier_likehood = pipeline.binary_classification()
+    #outlier_likehood = pd.read_csv('../submission/lgb_outlier_classifier_id'+(str(START_ID+1))+'.csv')
+
+    #best_model = pd.read_csv('../submission/3.695.csv')
+    #pipeline = pipeline.separate_prediction(outlier_likehood, model_without_outliers,best_model,'without_outlier_id'+(str(START_ID+2))+'.csv')
 
 
