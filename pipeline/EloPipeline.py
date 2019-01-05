@@ -182,12 +182,14 @@ class EloPipeline(object):
             dataset.set_outlier_col(self.train_X)
 
         train_df = self.train_X[self.train_X['outliers'] == 0]
+
         target = train_df['target']
         del train_df['target']
+
         return train_df, target
 
     def train_without_outlier_cat(self):
-        cat_model = CatBoostModel(contain_cate=True)
+        cat_model = CatBoostModel()
         param = {
             "iterations": 10000,
             "learning_rate": 0.005,
@@ -197,8 +199,7 @@ class EloPipeline(object):
             "od_type": 'Iter',
             "metric_period": 100,
             "od_wait": 50,
-            "random_state": 2333,
-            "l2_leaf_reg":100
+            "random_state": 2333
         }
         train_df, target = self.set_train_outlier()
         cat_model.set_train_test(train_df, target, self.test, self.features, self.cate_features, 'outliers')
@@ -242,7 +243,7 @@ class EloPipeline(object):
 if __name__ == "__main__":
 
     # 2.predict without outlier
-    pipeline = EloPipeline(train_file='train_clean.csv',test_file='test_clean.csv',combine_mode='without_outliers')
+    pipeline = EloPipeline(train_file='train_clean.csv',test_file='test_clean.csv',combine_mode='whole')
 
     # train a cat boost model without outlier
     cat_model_without_outliers = pipeline.train_without_outlier_cat()

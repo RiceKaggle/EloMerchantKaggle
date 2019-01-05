@@ -80,7 +80,6 @@ class CatBoostModel(MLModel):
         self.train_features = train_features
         self.cate_features = cate_features
 
-        print(self.train_X.dtypes)
 
         if self.split_method == 'StratifiedKFold':
             self.stratified_values = self.train_X[stratified_col].values
@@ -164,6 +163,10 @@ class CatBoostModel(MLModel):
         if read_data:
             self.read_data()
 
+        if not self.set_train_test_bool:
+            print("no data loaded ...")
+            return
+
         cv_error, oof_cat , prediction = self._train(params=param, predict=True)
 
         # for debug purpose
@@ -218,7 +221,7 @@ class CatBoostModel(MLModel):
 
 
 if __name__ == '__main__':
-    model = CatBoostModel()
+    model = CatBoostModel(train_file_name='train_clean.csv', test_file_name='test_clean.csv')
     param = {
         "iterations" : 10000,
         "learning_rate": 0.005,
@@ -230,4 +233,4 @@ if __name__ == '__main__':
         "od_wait" : 50,
         "random_state":2333
     }
-    model.predict_with_param(param=param, file_name="cat_id4.csv")
+    model.predict_with_param(param=param, file_name="cat_id4.4.csv")
