@@ -19,7 +19,6 @@ class EloPipeline(object):
                  combine_mode = 'whole', shuffle = True,
                  random_state = 15):
         '''
-
         :param data_dir:
         :param submission_dir:
         :param train_file:
@@ -110,10 +109,10 @@ class EloPipeline(object):
 
             print("cv score : ",np.sqrt(mean_squared_error(target.values, oof_stack)))
             print('save stacked oof file and prediction file ...')
-            oof_file_name = '_'.join([name[:len(name)-4] for name in prediction_list_name]).strip()
-            oof_file_name = 'oof_merge_'+oof_file_name
-            pred_file_name = '_'.join([name[:len(name)-4] for name in prediction_list_name]).strip()
-            pred_file_name = 'merge_'+pred_file_name
+            oof_file_name = '_'.join([name[name.rfind('_')+1:name.rfind('.')] for name in prediction_list_name]).strip()
+            oof_file_name = 'oof_merge_'+oof_file_name+".csv"
+            pred_file_name = '_'.join([name[name.rfind('_')+1:name.rfind('.')] for name in prediction_list_name]).strip()
+            pred_file_name = 'merge_'+pred_file_name+".csv"
 
             stack_result = pd.DataFrame({'card_id':test_df['card_id']})
             stack_result['target'] = predictions_stack
@@ -188,18 +187,18 @@ class EloPipeline(object):
 
         return train_df, target
 
-    
+
     def train_without_outlier_cat(self):
-        cat_model = CatBoostModel()
+        cat_model = CatBoostModel(contain_cate=True)
         param = {
             "iterations": 10000,
-            "learning_rate": 0.005,
-            "depth": 6,
+            "learning_rate": 0.05,
+            "depth": 10,
             "eval_metric": 'RMSE',
-            "bagging_temperature": 0.9,
+            "bagging_temperature": 0.2,
             "od_type": 'Iter',
-            "metric_period": 100,
-            "od_wait": 50,
+            "metric_period": 50,
+            "od_wait": 20,
             "random_state": 2333
         }
         train_df, target = self.set_train_outlier()
@@ -244,16 +243,18 @@ class EloPipeline(object):
 if __name__ == "__main__":
 
     # 2.predict without outlier
-    pipeline = EloPipeline(train_file='train_clean.csv',test_file='test_clean.csv',combine_mode='whole')
+    pipeline = EloPipeline(train_file='train_clean.csv',test_file='test_clean.csv',combine_mode='without_outliers')
 
     # train a cat boost model without outlier
-    cat_model_without_outliers = pipeline.train_without_outlier_cat()
+    # cat_model_without_outliers = pipeline.train_without_outlier_cat()
 
     #model_without_outliers = pipeline.train_without_outlier_lgb()
-    lgb_model_without_outliers = pd.read_csv('../submission/lgb_without_outlier_id'+(str(START_ID))+'.csv')
+    #lgb_model_without_outliers = pd.read_csv('../submission/lgb_without_outlier_id'+(str(START_ID))+'.csv')
 
-    predict_list = ['lgb_without_outlier_id'+(str(START_ID))+'.csv', 'cat_without_outlier_id'+(str(START_ID))+'.csv']
+    predict_list = ['lgb_without_outlier_id'+(str(START_ID))+'.csv', 'lgb_repeat_without_outlier_id11#1.csv']
+
     pipeline.stack_model(predict_list)
+
 
 
     #outlier_likehood = pipeline.binary_classification()

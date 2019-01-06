@@ -141,14 +141,15 @@ class CatBoostModel(MLModel):
 
             model_cat = CatBoostRegressor(**params)
             if self.contain_cate:
-                trn_data = cb.Pool(self.train_X.iloc[train_index][self.train_features], self.train_Y[train_index],cat_features=self.cate_features)
-                val_data = cb.Pool(self.train_X.iloc[val_index][self.train_features], self.train_Y[val_index],cat_features=self.cate_features)
+                cate_feture_indices = [self.train_X.columns.get_loc(col) for col in self.cate_features]
+                trn_data = cb.Pool(self.train_X.iloc[train_index][self.train_features], self.train_Y[train_index],cat_features=cate_feture_indices)
+                val_data = cb.Pool(self.train_X.iloc[val_index][self.train_features], self.train_Y[val_index],cat_features=cate_feture_indices)
 
             else:
                 trn_data = cb.Pool(self.train_X.iloc[train_index][self.train_features], self.train_Y[train_index])
                 val_data = cb.Pool(self.train_X.iloc[val_index][self.train_features], self.train_Y[val_index])
 
-            model_cat.fit(trn_data, verbose_eval=400, eval_set=val_data)
+            model_cat.fit(trn_data, verbose_eval=400,  eval_set=val_data)
 
             oof_cat[val_index] = model_cat.predict(self.train_X.iloc[val_index][self.train_features])
             # only when predict is true calculate the featrue importance and predict on test set
