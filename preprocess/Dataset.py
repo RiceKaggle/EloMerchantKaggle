@@ -148,6 +148,24 @@ class Dataset(object):
         datetime.datetime.today() - df_new_trans_group['new_hist_purchase_date_max']).dt.days
         return df_hist_trans_group, df_new_trans_group
 
+    def combine_all_features(self, train_list, test_list):
+        train_df = self.load_train()
+        test_df = self.load_test()
+
+        for file in zip(train_list, test_list):
+
+            train_path = os.path.join(self.base_dir, file[0])
+            test_path = os.path.join(self.base_dir, file[1])
+
+            if os.path.isfile(train_path) and os.path.isfile(test_path):
+                new_train_file = pd.read_csv(train_path)
+                new_test_file = pd.read_csv(test_path)
+                attach_features = [_f for _f in new_test_file.columns.values if _f not in train_df.columns.values]
+                train_df = train_df.merge(new_train_file[attach_features],on="card_id", how="left")
+                test_df = test_df.merge(new_test_file[attach_features], on="card_id", how="left")
+
+        train_df.to_csv(os.path.join(self.base_dir, "train_all.csv"))
+        test_df.to_csv(os.path.join(self.base_dir, "test_all.csv"))
 
 
     def convert_feature_to_outlier_mean(self,df_train, df_test):
