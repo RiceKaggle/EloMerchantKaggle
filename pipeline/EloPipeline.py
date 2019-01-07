@@ -159,7 +159,7 @@ class EloPipeline(object):
 
 
     def separate_prediction(self, outlier_classfier, model_without_outlier, best_model, submission_name):
-        outlier_id = pd.DataFrame(outlier_classfier.sort_values(by='target', ascending=False).head(25000)['card_id'])
+        outlier_id = pd.DataFrame(outlier_classfier.sort_values(by='target', ascending=False).head(30000)['card_id'])
 
         most_likely_liers = best_model.merge(outlier_id, how='right')
         print(most_likely_liers.head(50))
@@ -251,16 +251,23 @@ if __name__ == "__main__":
     #model_without_outliers = pipeline.train_without_outlier_lgb()
     #lgb_model_without_outliers = pd.read_csv('../submission/lgb_without_outlier_id'+(str(START_ID))+'.csv')
 
-    predict_list = ['lgb_without_outlier_id'+(str(START_ID))+'.csv', 'lgb_repeat_without_outlier_id11#1.csv']
 
-    pipeline.stack_model(predict_list)
+    # 1. stack model
+    # predict_list = ['lgb_repeat_without_outlier_id11#1.csv', 'cat_without_outlier_id11#2.csv']
+    #
+    #
+    # pipeline.stack_model(predict_list)
 
 
 
     #outlier_likehood = pipeline.binary_classification()
-    #outlier_likehood = pd.read_csv('../submission/lgb_outlier_classifier_id'+(str(START_ID+1))+'.csv')
 
-    #best_model = pd.read_csv('../submission/3.695.csv')
-    #pipeline = pipeline.separate_prediction(outlier_likehood, model_without_outliers,best_model,'without_outlier_id'+(str(START_ID+2))+'.csv')
+    # 2. used to make final prediction
+    merge_lgb_cat_without_outliers = pd.read_csv('../submission/merge_id11_id11#1.csv')
+    outlier_likehood = pd.read_csv('../submission/lgb_outlier_classifier_id'+(str(START_ID+1))+'.csv')
 
+    best_model = pd.read_csv('../submission/3.695.csv')
+    #pipeline = pipeline.separate_prediction(outlier_likehood, merge_lgb_cat_without_outliers,best_model,'without_outlier_id'+(str(START_ID+2))+'.csv')
+    pipeline = pipeline.separate_prediction(outlier_likehood, merge_lgb_cat_without_outliers, best_model,
+                                            'without_outlier_id18.csv')
 

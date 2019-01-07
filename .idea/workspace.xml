@@ -2,21 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="61b8f875-c0c0-4284-8748-721dd2c4a72e" name="Default" comment="First commit">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/model/catboost_info/learn/events.out.tfevents" afterPath="$PROJECT_DIR$/model/catboost_info/learn/events.out.tfevents" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/model/catboost_info/test/events.out.tfevents" afterPath="$PROJECT_DIR$/model/catboost_info/test/events.out.tfevents" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pipeline/catboost_info/learn/events.out.tfevents" afterPath="$PROJECT_DIR$/pipeline/catboost_info/learn/events.out.tfevents" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pipeline/catboost_info/test/events.out.tfevents" afterPath="$PROJECT_DIR$/pipeline/catboost_info/test/events.out.tfevents" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/model/CatBoostModel.py" afterPath="$PROJECT_DIR$/model/CatBoostModel.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/model/catboost_info/catboost_training.json" afterPath="$PROJECT_DIR$/model/catboost_info/catboost_training.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/model/catboost_info/learn_error.tsv" afterPath="$PROJECT_DIR$/model/catboost_info/learn_error.tsv" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/model/catboost_info/test_error.tsv" afterPath="$PROJECT_DIR$/model/catboost_info/test_error.tsv" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/model/catboost_info/time_left.tsv" afterPath="$PROJECT_DIR$/model/catboost_info/time_left.tsv" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pipeline/EloPipeline.py" afterPath="$PROJECT_DIR$/pipeline/EloPipeline.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pipeline/catboost_info/catboost_training.json" afterPath="$PROJECT_DIR$/pipeline/catboost_info/catboost_training.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pipeline/catboost_info/learn_error.tsv" afterPath="$PROJECT_DIR$/pipeline/catboost_info/learn_error.tsv" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pipeline/catboost_info/test_error.tsv" afterPath="$PROJECT_DIR$/pipeline/catboost_info/test_error.tsv" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pipeline/catboost_info/time_left.tsv" afterPath="$PROJECT_DIR$/pipeline/catboost_info/time_left.tsv" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -30,7 +16,7 @@
     <SUITE FILE_PATH="coverage/EloMerchantKaggle$cat_test.coverage" NAME="cat_test Coverage Results" MODIFIED="1546723283728" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/pipeline" />
     <SUITE FILE_PATH="coverage/EloMerchantKaggle$PIMP.coverage" NAME="PIMP Coverage Results" MODIFIED="1546397962990" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/preprocess" />
     <SUITE FILE_PATH="coverage/EloMerchantKaggle$LGBModel.coverage" NAME="LGBModel Coverage Results" MODIFIED="1546613899161" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/model" />
-    <SUITE FILE_PATH="coverage/EloMerchantKaggle$EloPipeline.coverage" NAME="EloPipeline Coverage Results" MODIFIED="1546792310639" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/pipeline" />
+    <SUITE FILE_PATH="coverage/EloMerchantKaggle$EloPipeline.coverage" NAME="EloPipeline Coverage Results" MODIFIED="1546805631621" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/pipeline" />
     <SUITE FILE_PATH="coverage/EloMerchantKaggle$FeatureSelection.coverage" NAME="FeatureSelection Coverage Results" MODIFIED="1546375049199" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/preprocess" />
     <SUITE FILE_PATH="coverage/EloMerchantKaggle$outlier_test.coverage" NAME="outlier_test Coverage Results" MODIFIED="1546613620949" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/pipeline" />
     <SUITE FILE_PATH="coverage/EloMerchantKaggle$Dataset.coverage" NAME="Dataset Coverage Results" MODIFIED="1545977784486" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/preprocess" />
@@ -40,11 +26,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="EloPipeline.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="EloPipeline.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/pipeline/EloPipeline.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="219">
-              <caret line="77" column="53" lean-forward="false" selection-start-line="77" selection-start-column="43" selection-end-line="77" selection-end-column="53" />
+            <state relative-caret-position="201">
+              <caret line="161" column="100" lean-forward="false" selection-start-line="161" selection-start-column="100" selection-end-line="161" selection-end-column="100" />
               <folding />
             </state>
           </provider>
@@ -60,11 +46,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="base.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../../../codelibrary/anaconda2/envs/kaggle/lib/python3.4/site-packages/pandas/indexes/base.py">
+      <file leaf-file-name="lgb_repeat_without_outlier_id11#1.csv" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/submission/lgb_repeat_without_outlier_id11#1.csv">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="198">
-              <caret line="2133" column="0" lean-forward="false" selection-start-line="2133" selection-start-column="0" selection-end-line="2133" selection-end-column="0" />
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -90,11 +76,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="cat_test.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="cat_test.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pipeline/cat_test.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="301">
-              <caret line="42" column="31" lean-forward="true" selection-start-line="42" selection-start-column="31" selection-end-line="42" selection-end-column="31" />
+            <state relative-caret-position="140">
+              <caret line="31" column="22" lean-forward="true" selection-start-line="31" selection-start-column="22" selection-end-line="31" selection-end-column="22" />
               <folding />
             </state>
           </provider>
@@ -207,8 +193,8 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="251" />
-    <option name="y" value="23" />
+    <option name="x" value="342" />
+    <option name="y" value="348" />
     <option name="width" value="1440" />
     <option name="height" value="877" />
   </component>
@@ -282,12 +268,6 @@
               <item name="EloMerchantKaggle" type="462c0819:PsiDirectoryNode" />
               <item name="submission" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="EloMerchantKaggle" type="b2602c69:ProjectViewProjectNode" />
-              <item name="EloMerchantKaggle" type="462c0819:PsiDirectoryNode" />
-              <item name="submission" type="462c0819:PsiDirectoryNode" />
-              <item name="oof" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
@@ -303,15 +283,15 @@
     <property name="SearchEverywhereHistoryKey" value="set_test&#9;null&#9;null&#10;set_train_tes&#9;null&#9;null" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/submission" />
+      <recent name="$PROJECT_DIR$/submission/oof" />
+      <recent name="$PROJECT_DIR$/data" />
+      <recent name="$PROJECT_DIR$" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/data" />
       <recent name="$PROJECT_DIR$/best_param" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/submission/oof" />
-      <recent name="$PROJECT_DIR$/submission" />
-      <recent name="$PROJECT_DIR$/data" />
-      <recent name="$PROJECT_DIR$" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -459,16 +439,15 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="251" y="23" width="1440" height="877" extended-state="0" />
-    <editor active="true" />
+    <frame x="342" y="348" width="1440" height="877" extended-state="0" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32969216" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32969216" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2084399" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2966752" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.27110156" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.113018595" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32992327" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -776,7 +755,7 @@
         <state relative-caret-position="7128">
           <caret line="400" column="15" lean-forward="false" selection-start-line="400" selection-start-column="8" selection-end-line="400" selection-end-column="15" />
           <folding>
-            <element signature="e#0#9#0" expanded="true" />
+            <element signature="e#0#9#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -786,7 +765,7 @@
         <state relative-caret-position="3852">
           <caret line="224" column="54" lean-forward="false" selection-start-line="224" selection-start-column="43" selection-end-line="224" selection-end-column="54" />
           <folding>
-            <element signature="e#0#33#0" expanded="true" />
+            <element signature="e#0#33#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -841,18 +820,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pipeline/EloPipeline.py">
+    <entry file="file://$PROJECT_DIR$/pipeline/cat_test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="219">
-          <caret line="77" column="53" lean-forward="false" selection-start-line="77" selection-start-column="43" selection-end-line="77" selection-end-column="53" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/submission/lgb_repeat_without_outlier_id11#1.csv">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        <state relative-caret-position="140">
+          <caret line="31" column="22" lean-forward="true" selection-start-line="31" selection-start-column="22" selection-end-line="31" selection-end-column="22" />
           <folding />
         </state>
       </provider>
@@ -865,10 +836,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pipeline/cat_test.py">
+    <entry file="file://$PROJECT_DIR$/submission/lgb_repeat_without_outlier_id11#1.csv">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="301">
-          <caret line="42" column="31" lean-forward="true" selection-start-line="42" selection-start-column="31" selection-end-line="42" selection-end-column="31" />
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pipeline/EloPipeline.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="201">
+          <caret line="161" column="100" lean-forward="false" selection-start-line="161" selection-start-column="100" selection-end-line="161" selection-end-column="100" />
           <folding />
         </state>
       </provider>
