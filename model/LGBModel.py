@@ -346,7 +346,7 @@ class LGBModel(MLModel):
 
 
 if __name__ == '__main__':
-    model = LGBModel(train_file_name='train_clean.csv', test_file_name='test_clean.csv',bayesian_optimisation=True,debug=False,verbose_eval=False)
+    model = LGBModel(train_file_name='train_all.csv', test_file_name='test_all.csv',bayesian_optimisation=True,debug=False,verbose_eval=False)
     # model.train()
     # model.predict()
     param = {'num_leaves': 31,
@@ -365,4 +365,4 @@ if __name__ == '__main__':
              "nthread": 4,
              "verbosity": -1}
 
-    model.predict_with_param(param, file_name='lgb_id14.csv')
+    model.predict_with_param(param, file_name='lgb_id19.csv')

@@ -9,7 +9,7 @@ from preprocess.Dataset import Dataset
 import lightgbm as lgb
 from model.CatBoostModel import CatBoostModel
 
-START_ID = 11
+START_ID = 20
 
 class EloPipeline(object):
     def __init__(self, data_dir = '../data',
@@ -246,28 +246,30 @@ if __name__ == "__main__":
     pipeline = EloPipeline(train_file='train_clean.csv',test_file='test_clean.csv',combine_mode='without_outliers')
 
     # train a cat boost model without outlier
-    # cat_model_without_outliers = pipeline.train_without_outlier_cat()
+    #cat_model_without_outliers = pipeline.train_without_outlier_cat()
 
     #model_without_outliers = pipeline.train_without_outlier_lgb()
     #lgb_model_without_outliers = pd.read_csv('../submission/lgb_without_outlier_id'+(str(START_ID))+'.csv')
+    #outlier_likehood = pipeline.binary_classification()
+    #best_model = pd.read_csv('../submission/3.695.csv')
 
 
-    # 1. stack model
-    # predict_list = ['lgb_repeat_without_outlier_id11#1.csv', 'cat_without_outlier_id11#2.csv']
-    #
-    #
-    # pipeline.stack_model(predict_list)
+    #1. stack model
+    #predict_list = ['lgb_without_outlier_id11.csv','lgb_repeat_without_outlier_id11#1.csv', 'cat_without_outlier_id11#2.csv','lgb_without_outlier_id11#3.csv']
+
+
+    #pipeline.stack_model(predict_list)
 
 
 
     #outlier_likehood = pipeline.binary_classification()
 
     # 2. used to make final prediction
-    merge_lgb_cat_without_outliers = pd.read_csv('../submission/merge_id11_id11#1.csv')
-    outlier_likehood = pd.read_csv('../submission/lgb_outlier_classifier_id'+(str(START_ID+1))+'.csv')
-
+    merge_lgb_cat_without_outliers = pd.read_csv('../submission/merge_id11_id11#1_id11#2_id11#3.csv')
+    outlier_likehood = pd.read_csv('../submission/lgb_outlier_classifier_id12.csv')
+    #
     best_model = pd.read_csv('../submission/3.695.csv')
     #pipeline = pipeline.separate_prediction(outlier_likehood, merge_lgb_cat_without_outliers,best_model,'without_outlier_id'+(str(START_ID+2))+'.csv')
     pipeline = pipeline.separate_prediction(outlier_likehood, merge_lgb_cat_without_outliers, best_model,
-                                            'without_outlier_id18.csv')
+                                            'without_outlier_id19.csv')
 

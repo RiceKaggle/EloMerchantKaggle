@@ -151,9 +151,7 @@ class Dataset(object):
     def combine_all_features(self, train_list, test_list):
         train_df = self.load_train()
         test_df = self.load_test()
-
         for file in zip(train_list, test_list):
-
             train_path = os.path.join(self.base_dir, file[0])
             test_path = os.path.join(self.base_dir, file[1])
 
@@ -161,9 +159,9 @@ class Dataset(object):
                 new_train_file = pd.read_csv(train_path)
                 new_test_file = pd.read_csv(test_path)
                 attach_features = [_f for _f in new_test_file.columns.values if _f not in train_df.columns.values]
+                attach_features.append('card_id')
                 train_df = train_df.merge(new_train_file[attach_features],on="card_id", how="left")
                 test_df = test_df.merge(new_test_file[attach_features], on="card_id", how="left")
-
         train_df.to_csv(os.path.join(self.base_dir, "train_all.csv"))
         test_df.to_csv(os.path.join(self.base_dir, "test_all.csv"))
 
@@ -449,7 +447,10 @@ if __name__ == '__main__':
     # train_X, train_Y, test = dataset.preprocess(reload=True)
 
     dataset = Dataset('df_train_agg1.csv','df_test_agg1.csv')
-    dataset.ffmtxt2csv()
+    #dataset.ffmtxt2csv()
+    dataset.combine_all_features(['train_clean.csv','train_agg_id1.csv','df_train_agg1.csv'],
+                                 ['test_clean.csv','test_agg_id1.csv', 'df_test_agg1.csv'])
+
 
 
 
