@@ -222,7 +222,7 @@ class CatBoostModel(MLModel):
 
 
 if __name__ == '__main__':
-    model = CatBoostModel(train_file_name='train_clean.csv', test_file_name='test_clean.csv')
+    model = CatBoostModel(train_file_name='train.csv', test_file_name='test.csv')
     param = {
         "iterations" : 10000,
         "learning_rate": 0.005,
@@ -234,4 +234,4 @@ if __name__ == '__main__':
         "od_wait" : 50,
         "random_state":2333
     }
-    model.predict_with_param(param=param, file_name="cat_id4.4.csv")
+    model.predict_with_param(param=param, file_name="cat_id4.5.csv")
